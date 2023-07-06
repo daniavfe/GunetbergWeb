@@ -1,0 +1,21 @@
+.post-list-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: stretch;
+    flex-grow: 1;
+}
+
+.post-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 1em;
+    row-gap: 1em;
+    margin: 40px 0 40px 0;
+}
+
+.title-filter-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}

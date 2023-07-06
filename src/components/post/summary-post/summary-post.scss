@@ -1,0 +1,25 @@
+.summary-post{
+    background: #EEE;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-items: start;
+    min-width: 0;
+    min-height: 0;
+    border-radius: .5em;
+}
+
+.summary-post-image{
+    border-top-right-radius: .5em;
+    border-top-left-radius: .5em;
+    overflow: hidden;
+
+    img{
+        width: 100%;
+        object-fit: contain;
+    }
+}
+
+.summary-post-content{
+    padding: 10px;
+}

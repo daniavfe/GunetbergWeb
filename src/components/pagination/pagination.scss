@@ -1,0 +1,12 @@
+.pagination-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination-item{
+    padding: 10px;
+    background: #DDD;
+    margin: 0 5px 0 5px;
+}

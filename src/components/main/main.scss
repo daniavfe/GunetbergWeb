@@ -1,0 +1,21 @@
+
+body{
+    background: #FFF;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: start;
+}
+
+.root-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: stretch;
+    width: 100vw;
+    height: 100vh;
+    max-width: 900px;
+    flex-grow: 1;
+}
