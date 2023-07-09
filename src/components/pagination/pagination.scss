@@ -5,8 +5,11 @@
     align-items: center;
 }
 
-.pagination-item{
+.pagination-button{
+    border-radius: .5em;
+    border: 1px solid #999;
+    background: transparent;
+    cursor: pointer;
     padding: 10px;
-    background: #DDD;
-    margin: 0 5px 0 5px;
+    margin: 0 5px;
 }

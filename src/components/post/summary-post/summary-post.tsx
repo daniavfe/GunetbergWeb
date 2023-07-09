@@ -17,7 +17,7 @@ const SummaryPostComponent: React.FC<SummaryPostProps> = ({summaryPost})=>{
     }
 
     return (
-        <div id={`summary-post-${summaryPost.id}`} className="summary-post" onClick={loadDetailPost}>
+        <div className="summary-post" onClick={loadDetailPost}>
             <div className="summary-post-image">
                 <img src={summaryPost.imageUrl}/>
             </div>

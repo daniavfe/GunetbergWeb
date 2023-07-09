@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import PostApiClient from "../../../api/postApiClient";
 import CompletePost from "../../../model/post/completePost";
 import { AxiosResponse } from "axios";
+import "./detail.scss"
 
 interface DetailPostProps{
     postApiClient: PostApiClient
@@ -24,15 +25,15 @@ const DetailPostComponent: React.FC<DetailPostProps> = ({postApiClient}) => {
 
     
     return (
-        <section id="post-detail">
+        <section id="post-detail" className="post-detail">
             {
                 post != null ? 
                 <div>
-                    <header>{post.title}</header>
-                    <div id="post-image">
+                    <div className="post-image">
                         <img src={post.imageUrl}></img>
                     </div>
-                    <p>{post.content}</p>
+                    <h1>{post.title}</h1>
+                    <p  className="post-content">{post.content}</p>
                 </div> : 
                 <div>No post loaded</div>
             }

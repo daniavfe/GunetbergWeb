@@ -7,12 +7,14 @@
     min-width: 0;
     min-height: 0;
     border-radius: .5em;
+    cursor: pointer;
 }
 
 .summary-post-image{
     border-top-right-radius: .5em;
     border-top-left-radius: .5em;
     overflow: hidden;
+    max-height: 10em;
 
     img{
         width: 100%;

@@ -2,23 +2,26 @@ import './pagination.scss';
 
 interface PaginationProps{
     page: number,
-    pages: number
+    pages: number,
+    offset: number,
+    onPageChanged: Function,
 }
 
+const PaginationComponent: React.FC<PaginationProps> = ({page, pages, offset, onPageChanged}) =>{
 
-const PaginationComponent: React.FC<PaginationProps> = ({page, pages}) =>{
-
-    const loadPage: React.MouseEventHandler<HTMLDivElement> = (e) =>{
-        e.preventDefault();
+    const getPaginationItems = () => {    
+        return Array.from(Array(page+offset+1).keys()).filter(it=>{
+            return it >=1 && it <= pages && it >= page-offset
+        })        
     }
 
     return(
         <div id="pagination-container" className='pagination-container'>
             {
-                Array.from(Array(pages).keys()).map(p=>
-                    <div className="pagination-item" onClick={loadPage}>
-                        {p+1}
-                    </div>
+                getPaginationItems().map(p=>
+                    <button key={`pagination-button-${p}`} className="pagination-button" onClick={()=>onPageChanged(p)} disabled={page == p}>
+                        {p}
+                    </button>
                 ) 
             }
         </div>

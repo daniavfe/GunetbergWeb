@@ -11,11 +11,19 @@
     grid-template-columns: repeat(3, 1fr);
     column-gap: 1em;
     row-gap: 1em;
-    margin: 40px 0 40px 0;
+    margin: 10px 0 10px 0;
 }
 
 .title-filter-container {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+}
+
+.post-list-search{
+    padding: 5px;
+    border-radius: .5em;
+    outline: none;
+    border: 1px solid #999;
+    margin: 0 10px;
 }
