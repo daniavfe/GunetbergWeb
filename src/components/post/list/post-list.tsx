@@ -7,8 +7,9 @@ import { AxiosResponse, post } from "axios";
 import SearchResult from "../../../model/common/searchResult";
 import SummaryPostComponent from "../summary-post/summary-post";
 import PaginationComponent from "../../pagination/pagination";
-import './post-list.scss'
 import { useLocation, useSearchParams } from "react-router-dom";
+
+import './post-list.scss'
 
 interface PostListProps{
     postApiClient: PostApiClient
@@ -17,7 +18,7 @@ interface PostListProps{
 const PostListComponent: React.FC<PostListProps> = ({postApiClient}) =>{
     
     const location = useLocation();
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [, setSearchParams] = useSearchParams();
     const [posts, setPosts] = useState<SearchResult<SummaryPost>>();
     const [refresh, setRefresh] = useState<boolean>(false);
     const [titleFilter, setTitleFilter] = useState<string>();
@@ -25,6 +26,16 @@ const PostListComponent: React.FC<PostListProps> = ({postApiClient}) =>{
     const [itemsPerPage, setItemsPerPage] = useState<number>();
     const [sortField, setSortField] = useState<string>();
     const [sortDescending, setSortDescending] = useState<boolean>();
+
+    const defaultPage = 1;
+    const defaultItemsPerPage = 5;
+    const defaultSortField = "CreatedAt";
+
+    const urlPageQuery = "page";
+    const urlItemsPerPageQuery = "itemsPerPage";
+    const urlSortFieldQuery = "sortField";
+    const urlSortDescendingQuery = "sortDescending";
+    const urlTitleFilterQuery = "titleFilter";
     
     const updatePage = (newPage:number) => updateValue(()=>setPage(newPage));
 
@@ -76,11 +87,11 @@ const PostListComponent: React.FC<PostListProps> = ({postApiClient}) =>{
             return;
         }
         const params = new URLSearchParams(location.search);
-        const urlPage = parseInt(params.get("page")) || 1;
-        const urlItemsPerPage = parseInt(params.get("itemsPerPage")) || 5;
-        const urlTitleFilter = params.get("titleFilter") || "";
-        const urlSortField = params.get("sortField") || "";
-        const urlSortDescending = params.get("sortDescending") == "true";
+        const urlPage = parseInt(params.get(urlPageQuery)) || defaultPage;
+        const urlItemsPerPage = parseInt(params.get(urlItemsPerPageQuery)) || defaultItemsPerPage;
+        const urlTitleFilter = params.get(urlTitleFilterQuery) || "";
+        const urlSortField = params.get(urlSortFieldQuery) || defaultSortField;
+        const urlSortDescending = params.get(urlSortDescendingQuery) == "true";
         setPage(urlPage);
         setItemsPerPage(urlItemsPerPage);
         setSortField(urlSortField);
@@ -122,7 +133,7 @@ const PostListComponent: React.FC<PostListProps> = ({postApiClient}) =>{
                         posts.items.map(post=><SummaryPostComponent key={`summary-post-${post.id}`} summaryPost={post}></SummaryPostComponent> )
                     }   
                     </div>   
-                    <PaginationComponent page={posts.page} pages={posts.pages} offset={3} onPageChanged={updatePage} />            
+                    <PaginationComponent page={posts.page} pages={posts.pages} offset={2} onPageChanged={updatePage} />            
                 </div> : <div>Nothing to show here</div> 
             }
             

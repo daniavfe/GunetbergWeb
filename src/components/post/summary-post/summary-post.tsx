@@ -18,12 +18,23 @@ const SummaryPostComponent: React.FC<SummaryPostProps> = ({summaryPost})=>{
 
     return (
         <div className="summary-post" onClick={loadDetailPost}>
-            <div className="summary-post-image">
-                <img src={summaryPost.imageUrl}/>
+            <div className="summary-post-image-container">
+                <div className="summary-post-image">
+                    <img src={summaryPost.imageUrl}/>
+                </div>
+                <div className="summary-post-image-opacity"></div>
+                <div className="summary-post-image-content">
+                    <h3>{summaryPost.title}</h3>
+                    <div className="language-chip">{summaryPost.language}</div>
+                </div>
             </div>
             <div className="summary-post-content">
-                <h3>{summaryPost.title}</h3>
                 <p>{summaryPost.summary}</p>
+            </div>
+            <div className="tag-list">
+                {
+                    summaryPost.tags.map(tag=><span className="tag">{tag.name}</span>)
+                }
             </div>
         </div>
     )
