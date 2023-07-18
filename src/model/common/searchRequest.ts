@@ -4,6 +4,7 @@ export default class SearchRequest<T>{
     itemsPerPage?: number;
     sortField?: string;
     filter?: T;
+    
 
     constructor(
         sortByDescending: boolean,
@@ -11,7 +12,6 @@ export default class SearchRequest<T>{
         itemsPerPage?: number, 
         sortField?: string,  
         filter?: T){
-
             this.sortByDescending = sortByDescending;
             this.page = page;
             this.itemsPerPage = itemsPerPage;

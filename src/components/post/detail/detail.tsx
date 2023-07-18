@@ -4,6 +4,7 @@ import PostApiClient from "../../../api/postApiClient";
 import CompletePost from "../../../model/post/completePost";
 import { AxiosResponse } from "axios";
 import "./detail.scss"
+import AuthorComponent from "../../author/author";
 
 interface DetailPostProps{
     postApiClient: PostApiClient
@@ -29,11 +30,17 @@ const DetailPostComponent: React.FC<DetailPostProps> = ({postApiClient}) => {
             {
                 post != null ? 
                 <div>
-                    <div className="post-image">
-                        <img src={post.imageUrl}></img>
+                    <div className="post-header">
+                        <div className="post-header-image">
+                            <img src={post.imageUrl}></img>
+                        </div>
+                        <div className="post-header-opacity"></div>
+                        <div className="post-header-content">
+                            <h1>{post.title}</h1>
+                        </div>
                     </div>
-                    <h1>{post.title}</h1>
                     <p  className="post-content">{post.content}</p>
+                    <AuthorComponent author={post.author}></AuthorComponent>
                 </div> : 
                 <div>No post loaded</div>
             }
