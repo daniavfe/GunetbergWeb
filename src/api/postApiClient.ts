@@ -9,10 +9,10 @@ import CompletePost from "../model/post/completePost";
 export default class PostApiClient extends ApiClient{
     
     getPost(id: string): Promise<AxiosResponse<CompletePost>> {
-        return this.httpClient.get<CompletePost>(`/posts/${id}`);
+        return this.getClient().get<CompletePost>(`/posts/${id}`);
     }
 
     searchPosts(searchRequest: SearchRequest<PostFilterRequest>): Promise<AxiosResponse<SearchResult<SummaryPost>>> {
-        return this.httpClient.post<SearchResult<SummaryPost>>("/posts/search", searchRequest);
+        return this.getClient().post<SearchResult<SummaryPost>>("/posts/search", searchRequest);
     }
 }

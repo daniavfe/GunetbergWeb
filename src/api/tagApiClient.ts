@@ -5,6 +5,6 @@ import Tag from "../model/tag/tag";
 export default class TagApiClient extends ApiClient{
     
     getTags(): Promise<AxiosResponse<Array<Tag>>> {
-        return this.httpClient.get<Array<Tag>>("/tags");
+        return this.getClient().get<Array<Tag>>("/tags");
     }
 }
