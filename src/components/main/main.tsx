@@ -8,6 +8,8 @@ import AuthApiClient from "../../api/authApiClient";
 
 import './main.scss'
 import CookieService from "../../persistence/cookieService";
+import AdminComponent from "../admin/admin";
+import GuardedRouteComponent from "./guarded-route/guarded-route";
 
 
 const Main: React.FC = ()=>{
@@ -20,6 +22,7 @@ const Main: React.FC = ()=>{
     return (
         <>
             <Routes>
+                <Route path='/admin' element={<GuardedRouteComponent authApiClient={authApiClient} component={<AdminComponent/>}></GuardedRouteComponent>}/>
                 <Route path="/login" element={<LoginComponent authApiClient={authApiClient} cookieService={cookieService}/>}/>
                 <Route path="/" element={<PostListComponent postApiClient={postApiClient} tagApiClient={tagApiClient}/>}/>
                 <Route path="/posts/:id" element={<DetailPostComponent postApiClient={postApiClient}/>}/>
