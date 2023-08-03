@@ -23,7 +23,7 @@ const Main: React.FC = ()=>{
     return (
         <>
             <Routes>
-                <Route path='/admin' element={<GuardedRouteComponent authApiClient={authApiClient} component={<AdminComponent postApiClient={postApiClient}/>}></GuardedRouteComponent>}/>
+                <Route path='/admin' element={<GuardedRouteComponent authApiClient={authApiClient} component={<AdminComponent postApiClient={postApiClient} tagApiClient={tagApiClient}/>}></GuardedRouteComponent>}/>
                 <Route path='/admin/editor/:id?' element={<GuardedRouteComponent authApiClient={authApiClient} component={<EditorComponent postApiClient={postApiClient}/>}></GuardedRouteComponent>}/>
                 <Route path="/login" element={<LoginComponent authApiClient={authApiClient} cookieService={cookieService}/>}/>
                 <Route path="/" element={<PostListComponent postApiClient={postApiClient} tagApiClient={tagApiClient}/>}/>

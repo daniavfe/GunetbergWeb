@@ -6,40 +6,130 @@ import AdminPost from "../../model/post/adminPost";
 import { AxiosResponse } from "axios";
 import SearchResult from "../../model/common/searchResult";
 import { useNavigate } from "react-router-dom";
+import TagApiClient from "../../api/tagApiClient";
+import Tag from "../../model/tag/tag";
+import PostFilterComponent from "../post/list/filter/filter";
+import PaginationComponent from "../pagination/pagination";
 
 interface AdminProps  {
     postApiClient: PostApiClient;
+    tagApiClient: TagApiClient;
 };
 
-const AdminComponent: React.FC<AdminProps> = ({postApiClient})=>{
+const AdminComponent: React.FC<AdminProps> = ({postApiClient, tagApiClient})=>{
 
     const navigate = useNavigate();
 
-    const [posts, setPosts] = useState<Array<AdminPost>>();
-
-    const loadPosts = ()=>{
-        postApiClient.searchAdminPosts(new SearchRequest<PostFilterRequest>(
+    const [searchRequest, setSearchRequest] = useState<SearchRequest<PostFilterRequest>>(
+        new SearchRequest<PostFilterRequest>(
             false, 1, 10, "CreatedAt", new PostFilterRequest("", [])
-        )).then((response: AxiosResponse<SearchResult<AdminPost>>)=>{
-            setPosts(response.data.items);
-            console.log(response.data);
+        )
+    );
+
+    const [searchResponse, setSearchResponse] = useState<SearchResult<AdminPost>>();
+
+    const [tags, setTags] = useState<Array<Tag>>([]);
+
+    const search = ()=>{
+        postApiClient.searchAdminPosts(searchRequest).then((response: AxiosResponse<SearchResult<AdminPost>>)=>{
+            setSearchResponse(response.data);
         })
     };
 
+    const getTags = ()=>{
+        tagApiClient.getTags()
+            .then((response: AxiosResponse<Array<Tag>>)=>{
+                setTags(response.data);
+        });
+    };
+
+    const updateItemsPerPage = (itemsPerPage: number)=>{
+        setSearchRequest(
+            new SearchRequest<PostFilterRequest>(
+                searchRequest.sortByDescending, searchRequest.page, itemsPerPage, searchRequest.sortField, 
+                new PostFilterRequest(searchRequest.filter.filterByTitle, searchRequest.filter.filterByTags)
+            )
+        );
+    }
+
+    const updatePage = (page: number)=>{
+        setSearchRequest(
+            new SearchRequest<PostFilterRequest>(
+                searchRequest.sortByDescending, page, searchRequest.itemsPerPage, searchRequest.sortField, 
+                new PostFilterRequest(searchRequest.filter.filterByTitle, searchRequest.filter.filterByTags)
+            )
+        );
+    }
+
+    const updateSortField= (sortField: string)=>{
+        setSearchRequest(
+            new SearchRequest<PostFilterRequest>(
+                searchRequest.sortByDescending, searchRequest.page, searchRequest.itemsPerPage, sortField, 
+                new PostFilterRequest(searchRequest.filter.filterByTitle, searchRequest.filter.filterByTags)
+            )
+        );
+    }
+
+    const updateSortByDecending= (sortByDescending: boolean)=>{
+        setSearchRequest(
+            new SearchRequest<PostFilterRequest>(
+                sortByDescending, searchRequest.page, searchRequest.itemsPerPage, searchRequest.sortField, 
+                new PostFilterRequest(searchRequest.filter.filterByTitle, searchRequest.filter.filterByTags)
+            )
+        );
+    }
+
+    const updateFilterByTitle= (filterByTitle: string)=>{
+        setSearchRequest(
+            new SearchRequest<PostFilterRequest>(
+                searchRequest.sortByDescending, searchRequest.page, searchRequest.itemsPerPage, searchRequest.sortField, 
+                new PostFilterRequest(filterByTitle, searchRequest.filter.filterByTags)
+            )
+        );
+    }
+
+    const updateFilterByTags= (filterByTags: Array<string>)=>{
+        setSearchRequest(
+            new SearchRequest<PostFilterRequest>(
+                searchRequest.sortByDescending, searchRequest.page, searchRequest.itemsPerPage, searchRequest.sortField, 
+                new PostFilterRequest(searchRequest.filter.filterByTitle, filterByTags)
+            )
+        );
+    }
+
     useEffect(()=>{
-        loadPosts();
+        getTags();
+        search();
     }, []);
 
     return (
         <div>
             <h1>Admin</h1>
             <div>
+                <div>
+                <PostFilterComponent 
+                        titleFilterChanged={updateFilterByTitle}
+                        itemsPerPageChanged={updateItemsPerPage}
+                        sortFieldChanged={updateSortField}
+                        sortDescendingChanged={updateSortByDecending}
+                        selectedTagsChanged={updateFilterByTags}
+                        titleFilter={searchRequest.filter.filterByTitle}
+                        itemsPerPage={searchRequest.itemsPerPage}
+                        sortField={searchRequest.sortField}
+                        sortDescending={searchRequest.sortByDescending}
+                        tags={tags}
+                        selectedTags={searchRequest.filter.filterByTags}
+                        refresh={search}/> 
+                </div>
                 {
-                    (posts != null) ?
+                    (searchResponse != null) ?
                     <div>
+                        <div>
                     {
-                        posts.map(post=> <div>{post.title} | {post.author.alias} <button onClick={()=>navigate(`/admin/editor/${post.id}`)}>Edit</button></div>)
+                        searchResponse.items.map(post=> <div>{post.title} | {post.author.alias} <button onClick={()=>navigate(`/admin/editor/${post.id}`)}>Edit</button></div>)
                     }
+                        </div>
+                        <PaginationComponent page={searchResponse.page} pages={searchResponse.pages} offset={2} onPageChanged={updatePage} /> 
                     </div>
                      : <div>Nothing here</div>
                 }
