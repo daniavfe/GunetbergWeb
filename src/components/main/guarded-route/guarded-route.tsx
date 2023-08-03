@@ -2,7 +2,7 @@ import {ReactElement, useEffect, useState } from "react";
 import AuthApiClient from "../../../api/authApiClient";
 import { AxiosResponse } from "axios";
 import React from "react";
-import { Navigate, redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 interface GuardedRouteProps{
