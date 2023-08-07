@@ -136,6 +136,7 @@ const PostListComponent: React.FC = () =>{
             {             
                 (posts != null && posts.items.length > 0) ? 
                 <div>
+                    
                     <div id="post-grid" className="post-grid">
                     {
                         posts.items.map(post=><SummaryPostComponent key={`summary-post-${post.id}`} summaryPost={post}></SummaryPostComponent> )
@@ -144,8 +145,8 @@ const PostListComponent: React.FC = () =>{
                     <PaginationComponent page={posts.page} pages={posts.pages} offset={2} onPageChanged={updatePage} />       
                 </div> : <div>There is nothing here</div>
             }
-            
         </section>
+
     )
 }
 

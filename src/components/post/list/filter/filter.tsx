@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Tag from "../../../../model/tag/tag";
 import "./filter.scss"
 
@@ -30,10 +31,24 @@ const PostFilterComponent: React.FC<PostFilterProps> = ({
         selectedTags,
         refresh 
     }) => {
+
+    const [filterSelectedtags, _] = useState<Array<string>>([]);
+
+    const addSelectedTag = (tagId: string)=>{
+        const index = filterSelectedtags.indexOf(tagId);
+        if(index >= 0){
+            filterSelectedtags.splice(index, 1);
+        }else{
+            filterSelectedtags.push(tagId);
+        }
+        console.log(filterSelectedtags);
+        selectedTagsChanged(filterSelectedtags);
+    }
+ 
     return (
         <aside id="filter-container" className="filter-container">
-            <h3>Filter</h3>
             <div className="filter-content">
+                <h3>Filter</h3>
                 <input id="post-list-search" className="post-list-search" type="text" placeholder="Title" value={titleFilter} onChange={(e)=>titleFilterChanged(e.target.value)}/>
 
                 <select className="simple-select" value={itemsPerPage} onChange={(e)=>{itemsPerPageChanged(parseInt(e.target.value))}}>
@@ -54,12 +69,16 @@ const PostFilterComponent: React.FC<PostFilterProps> = ({
                     <option value="false">Ascending</option>
                 </select>
 
-                <select value={selectedTags} multiple onChange={(e)=>{selectedTagsChanged(Array.from(e.target.selectedOptions, option => option.value))}}>
-                    {
-                        tags.map(it=><option key={`tag-${it.id}`} value={it.id}>{it.name}</option>)
-                    }
-
-                </select>
+                <h4>Tags</h4>
+                <div className="tag-chip-container">
+                {
+                    tags.map(it => 
+                        <span key={`tag-${it.id}`} className="selectable-chip">
+                            <input id={`${it.id}-id`} type="checkbox" value={it.id} onChange={(e)=>addSelectedTag(e.target.value)}/>
+                            <label htmlFor={`${it.id}-id`}>{it.name}</label>
+                        </span>)
+                }
+                </div>
 
                 <button className="simple-button" onClick={()=>refresh(true)}>Search</button>
             </div>
