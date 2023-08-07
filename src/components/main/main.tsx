@@ -1,33 +1,67 @@
-import { Route, Routes } from "react-router-dom";
-import PostApiClient from "../../api/postApiClient";
-import TagApiClient from "../../api/tagApiClient";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+
 import PostListComponent from "../post/list/post-list";
 import DetailPostComponent from "../post/detail/detail";
 import LoginComponent from "../login/login";
-import AuthApiClient from "../../api/authApiClient";
+
+
 
 import './main.scss'
-import CookieService from "../../persistence/cookieService";
 import GuardedRouteComponent from "./guarded-route/guarded-route";
 import EditorComponent from "../admin/editor/editor";
 import AdminComponent from "../admin/admin";
+import { apiClient } from "../../api/apiClient";
+import { useCookies } from "../../persistence/cookieService";
+import { AxiosError, AxiosResponse } from "axios";
+
+const HttpInterceptorSetup = ()=>{
+    const axiosApiClient = apiClient;
+
+    const navigate = useNavigate();
+    const location = useLocation()
+
+    axiosApiClient.interceptors.request.use(
+        function (config) {
+            const token = useCookies.getToken();
+            if(token){
+                config.headers.Authorization = `Bearer ${token}`
+            }
+          return config;
+        },
+        function (error) {
+          // Do something with request error
+          return Promise.reject(error);
+        }
+      );
+     
+      axiosApiClient.interceptors.response.use(
+        (response: AxiosResponse)=> {
+            return response;
+        },
+        (error: AxiosError) => {
+            if(error.response.status == 401){
+                const callback = `${location.pathname}${location.search ?? ""}`
+                navigate(`/login?callback=${callback}`);
+            }
+            return Promise.reject(error);
+        }
+    );
+
+    return <></>;
+}
 
 
 const Main: React.FC = ()=>{
 
-    const cookieService: CookieService = new CookieService();
-    const authApiClient: AuthApiClient = new AuthApiClient("https://localhost:7029/", cookieService);
-    const postApiClient: PostApiClient = new PostApiClient("https://localhost:7029/", cookieService);
-    const tagApiClient: TagApiClient = new TagApiClient("https://localhost:7029/", cookieService);
-
     return (
         <>
+            <HttpInterceptorSetup/>
             <Routes>
-                <Route path='/admin' element={<GuardedRouteComponent authApiClient={authApiClient} component={<AdminComponent postApiClient={postApiClient} tagApiClient={tagApiClient}/>}></GuardedRouteComponent>}/>
-                <Route path='/admin/editor/:id?' element={<GuardedRouteComponent authApiClient={authApiClient} component={<EditorComponent postApiClient={postApiClient}/>}></GuardedRouteComponent>}/>
-                <Route path="/login" element={<LoginComponent authApiClient={authApiClient} cookieService={cookieService}/>}/>
-                <Route path="/" element={<PostListComponent postApiClient={postApiClient} tagApiClient={tagApiClient}/>}/>
-                <Route path="/posts/:id" element={<DetailPostComponent postApiClient={postApiClient}/>}/>
+                <Route path='/admin' element={<GuardedRouteComponent component={<AdminComponent/>}></GuardedRouteComponent>}/>
+                <Route path='/admin/editor/:id?' element={<GuardedRouteComponent component={<EditorComponent/>}></GuardedRouteComponent>}/>
+                <Route path="/login" element={<LoginComponent />}/>
+                <Route path="/" element={<PostListComponent/>}/>
+                <Route path="/posts/:id" element={<DetailPostComponent/>}/>
             </Routes>
         </>
     );

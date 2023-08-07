@@ -3,29 +3,25 @@ import { useEffect, useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "./editor.scss";
-import PostApiClient from "../../../api/postApiClient";
 import CreatePostRequest from "../../../model/post/createPostRequest";
 import { AxiosResponse, post } from "axios";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CompletePost from "../../../model/post/completePost";
 import UpdatePostRequest from "../../../model/post/updatePostRequest";
+import { postApiClient } from "../../../api/postApiClient";
 
-interface EditorProps  {
-    postApiClient: PostApiClient;
-};
 
-const EditorComponent: React.FC<EditorProps> = ({postApiClient})=>{
+const EditorComponent: React.FC = ()=>{
 
     const navigate = useNavigate();
     const {id} = useParams();
     
     const [isCreationMode, setIsCreationMode] = useState<boolean>(true);
-    const [title, setTitle] = useState<string>();
-    const [imageUrl, setImageUrl] = useState<string>();
-    const [editorState, setEditorState] = useState<EditorState>();
+    const [title, setTitle] = useState<string>("");
+    const [imageUrl, setImageUrl] = useState<string>("");
+    const [editorState, setEditorState] = useState<EditorState>(null);
 
     const loadPost = (postId: string)=>{
-        console.log("Requested post: "+ postId);
         postApiClient.getPost(postId)
             .then((response:AxiosResponse<CompletePost>)=>{
                 const post = response.data;

@@ -1,24 +1,22 @@
 import Cookies from "universal-cookie";
 
-export default class CookieService{
-    private cookies: Cookies;
+const cookies = new Cookies();
+const tokenKey:string = "authToken";
 
-    private readonly tokenKey:string = "authToken";
+const getToken = ()=>{
+    return cookies.get(tokenKey);
+};
 
-    constructor(){
-        this.cookies = new Cookies();
-    }
+const setToken =(token:string)=>{
+    cookies.set(tokenKey, token);
+};
 
-    public getToken(): string{
-        return this.cookies.get(this.tokenKey);
-    }
+const removeToken = ()=>{
+    cookies.remove(tokenKey);
+};
 
-    public setToken(token:string){
-        this.cookies.set(this.tokenKey, token);
-    }
-
-    public removeToken(){
-        this.cookies.remove(this.tokenKey);
-    }
-
+export const useCookies = {
+    getToken:getToken,
+    setToken: setToken,
+    removeToken: removeToken
 }

@@ -1,17 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import PostApiClient from "../../../api/postApiClient";
 import CompletePost from "../../../model/post/completePost";
 import { AxiosResponse } from "axios";
 import "./detail.scss"
 import AuthorComponent from "../../author/author";
-
-interface DetailPostProps{
-    postApiClient: PostApiClient
-}
+import { postApiClient } from "../../../api/postApiClient";
 
 
-const DetailPostComponent: React.FC<DetailPostProps> = ({postApiClient}) => {
+const DetailPostComponent: React.FC = () => {
      
     const {id} = useParams();
 

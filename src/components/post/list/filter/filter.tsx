@@ -56,7 +56,7 @@ const PostFilterComponent: React.FC<PostFilterProps> = ({
 
                 <select value={selectedTags} multiple onChange={(e)=>{selectedTagsChanged(Array.from(e.target.selectedOptions, option => option.value))}}>
                     {
-                        tags.map(it=><option value={it.id}>{it.name}</option>)
+                        tags.map(it=><option key={`tag-${it.id}`} value={it.id}>{it.name}</option>)
                     }
 
                 </select>

@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import PostApiClient from "../../../api/postApiClient";
-import TagApiClient from "../../../api/tagApiClient";
 import SummaryPost from "../../../model/post/summaryPost";
 import SearchRequest from "../../../model/common/searchRequest";
 import PostFilterRequest from "../../../model/post/postFilterRequest";
@@ -12,13 +10,10 @@ import { useLocation, useSearchParams } from "react-router-dom";
 import Tag from "../../../model/tag/tag";
 import PostFilterComponent from "./filter/filter";
 import './post-list.scss'
+import { postApiClient } from "../../../api/postApiClient";
+import { tagApiClient } from "../../../api/tagApiClient";
 
-interface PostListProps{
-    postApiClient: PostApiClient,
-    tagApiClient: TagApiClient
-}
-
-const PostListComponent: React.FC<PostListProps> = ({postApiClient, tagApiClient}) =>{
+const PostListComponent: React.FC = () =>{
     
     const location = useLocation();
     const [, setSearchParams] = useSearchParams();

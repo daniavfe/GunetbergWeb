@@ -1,57 +1,52 @@
 import { useEffect, useState } from "react";
-import AuthApiClient from "../../api/authApiClient";
 import AuthorizationRequest from "../../model/authorization/authorizationRequest";
 import { AxiosResponse } from "axios";
-import CookieService from "../../persistence/cookieService";
-import { useNavigate } from "react-router-dom";
-import ValidationRequest from "../../model/authorization/validationRequest";
-import ValidationResponse from "../../model/authorization/validationResponse";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { authApiClient } from "../../api/authApiClient";
+import { useCookies } from "../../persistence/cookieService";
 
-interface LoginProps{
-    authApiClient: AuthApiClient,
-    cookieService: CookieService
-}
-
-
-const LoginComponent: React.FC<LoginProps> = ({authApiClient, cookieService})=>{
-
+const LoginComponent: React.FC = ()=>{
+    
     const navigate = useNavigate();
+
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const [callback, setCallback] = useState<string>();
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
     const attemptAuthorization = ()=>{
         authApiClient.authorize(new AuthorizationRequest(email, password))
             .then((response: AxiosResponse<string>)=>{
-                cookieService.setToken(response.data);
-                navigate(`/`);
+                useCookies.setToken(response.data);
+                navigate(callback);
             })
             .catch(()=>{
                 console.log("TODO:Log the error");
             });
     };
 
-    const validateToken = (token:string)=>{
+    const validateToken = ()=>{
         authApiClient.validateToken()
             .then((response: AxiosResponse)=>{
-                navigate(`/`);             
+                navigate(callback);             
             })
             .catch(()=>{
                 console.log("Token is not valid");
-                cookieService.removeToken();
+                useCookies.removeToken();
             });
     };
 
     const checkExistingToken = ()=>{
-        const token = cookieService.getToken();
-        console.log(token);
+        const token = useCookies.getToken();
         if(!!token){
-            validateToken(token);
+            validateToken();
         }
     }
 
-
     useEffect(()=>{
         checkExistingToken();
+        setCallback(searchParams.get("callback"));
     }, [])
 
     

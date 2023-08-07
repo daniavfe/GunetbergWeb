@@ -1,16 +1,15 @@
 import {ReactElement, useEffect, useState } from "react";
-import AuthApiClient from "../../../api/authApiClient";
 import { AxiosResponse } from "axios";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { authApiClient } from "../../../api/authApiClient";
 
 
 interface GuardedRouteProps{
-    authApiClient: AuthApiClient;
     component: ReactElement
 }
 
-const GuardedRouteComponent: React.FC<GuardedRouteProps> = ({component, authApiClient})=>{
+const GuardedRouteComponent: React.FC<GuardedRouteProps> = ({component})=>{
     
     const navigate = useNavigate()
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(null); 
@@ -21,8 +20,8 @@ const GuardedRouteComponent: React.FC<GuardedRouteProps> = ({component, authApiC
                 setIsAuthenticated(true)
             })
             .catch(()=>{
+                console.log("wrong validation");
                 setIsAuthenticated(false)
-                navigate("/");
             });
     }, []);
     

@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SummaryPost from "../../../model/post/summaryPost";
 import './summary-post.scss'
 

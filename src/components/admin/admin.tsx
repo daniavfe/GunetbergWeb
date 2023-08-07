@@ -1,22 +1,17 @@
 import { useEffect, useState } from "react";
-import PostApiClient from "../../api/postApiClient";
 import SearchRequest from "../../model/common/searchRequest";
 import PostFilterRequest from "../../model/post/postFilterRequest";
 import AdminPost from "../../model/post/adminPost";
 import { AxiosResponse } from "axios";
 import SearchResult from "../../model/common/searchResult";
 import { useNavigate } from "react-router-dom";
-import TagApiClient from "../../api/tagApiClient";
 import Tag from "../../model/tag/tag";
 import PostFilterComponent from "../post/list/filter/filter";
 import PaginationComponent from "../pagination/pagination";
+import { postApiClient } from "../../api/postApiClient";
+import { tagApiClient } from "../../api/tagApiClient";
 
-interface AdminProps  {
-    postApiClient: PostApiClient;
-    tagApiClient: TagApiClient;
-};
-
-const AdminComponent: React.FC<AdminProps> = ({postApiClient, tagApiClient})=>{
+const AdminComponent: React.FC= ()=>{
 
     const navigate = useNavigate();
 
@@ -125,9 +120,9 @@ const AdminComponent: React.FC<AdminProps> = ({postApiClient, tagApiClient})=>{
                     (searchResponse != null) ?
                     <div>
                         <div>
-                    {
-                        searchResponse.items.map(post=> <div>{post.title} | {post.author.alias} <button onClick={()=>navigate(`/admin/editor/${post.id}`)}>Edit</button></div>)
-                    }
+                        {
+                            searchResponse.items.map(post=> <div key={`admin-post-${post.id}`}>{post.title} | {post.author.alias} <button onClick={()=>navigate(`/admin/editor/${post.id}`)}>Edit</button></div>)
+                        }
                         </div>
                         <PaginationComponent page={searchResponse.page} pages={searchResponse.pages} offset={2} onPageChanged={updatePage} /> 
                     </div>
