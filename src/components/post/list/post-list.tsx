@@ -9,64 +9,41 @@ import PaginationComponent from "../../pagination/pagination";
 import { useLocation, useSearchParams } from "react-router-dom";
 import Tag from "../../../model/tag/tag";
 import PostFilterComponent from "./filter/filter";
-import './post-list.scss'
 import { postApiClient } from "../../../api/postApiClient";
 import { tagApiClient } from "../../../api/tagApiClient";
+
+import './post-list.scss'
 
 const PostListComponent: React.FC = () =>{
     
     const location = useLocation();
-    const [, setSearchParams] = useSearchParams();
-    const [tags, setTags] = useState<Array<Tag>>([]);
-    const [posts, setPosts] = useState<SearchResult<SummaryPost>>();
-    const [refresh, setRefresh] = useState<boolean>(false);
-    const [titleFilter, setTitleFilter] = useState<string>("");
-    const [page, setPage] = useState<number>(1);
-    const [itemsPerPage, setItemsPerPage] = useState<number>(10);
-    const [sortField, setSortField] = useState<string>("");
-    const [sortDescending, setSortDescending] = useState<boolean>(false);
-    const [selectedTags, setSelectedTags] = useState<Array<string>>([]);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [tags, setTags] = useState<Array<Tag>>(null);
+    const [searchRequest, setSearchRequest] = useState<SearchRequest<PostFilterRequest>>(null);
+    const [searchResponse, setSearchResponse] = useState<SearchResult<SummaryPost>>(null);
+    const [updateParams, setUpdateParams] = useState<boolean>(true);
 
-    const defaultPage = 1;
-    const defaultItemsPerPage = 5;
-    const defaultSortField = "CreatedAt";
-
-    const urlPageQuery = "page";
-    const urlItemsPerPageQuery = "itemsPerPage";
-    const urlSortFieldQuery = "sortField";
-    const urlSortDescendingQuery = "sortDescending";
-    const urlTitleFilterQuery = "titleFilter";
+    useEffect(()=>{
+        getTags();
+    },[]);
     
-    const updatePage = (newPage:number) => updateValue(()=>setPage(newPage));
-
-    const search = (
-        page: number, 
-        filterByTitle: string, 
-        itemsPerPage: number,
-        sortField: string,
-        sortDescending: boolean,
-        updateParams: boolean = true)=> {
-        postApiClient.searchPosts(
-            new SearchRequest<PostFilterRequest>(
-                sortDescending, page, itemsPerPage, sortField, new PostFilterRequest(filterByTitle, selectedTags)
-            )
-        ).then((response: AxiosResponse<SearchResult<SummaryPost>>)=>{
-            setPosts(response.data);
-            setPage(response.data.page);
-            setItemsPerPage(response.data.itemsPerPage);
-            setSortField(response.data.sortingField);
-            setSortDescending(response.data.sortByDescending); 
-            if(updateParams){
+    const search = ()=> {
+        postApiClient.searchPosts(searchRequest)
+        .then((response: AxiosResponse<SearchResult<SummaryPost>>)=>{
+            setSearchResponse(response.data);   
+            if(updateParams){ 
                 setSearchParams(
                     {
                         page: response.data.page.toString(), 
                         itemsPerPage: response.data.itemsPerPage.toString(),
                         sortField: response.data.sortingField.toString(),
                         sortDescending: response.data.sortByDescending.toString(),
-                        titleFilter: titleFilter
+                        title: searchRequest.filter.filterByTitle,
+                        tags: searchRequest.filter.filterByTags
                     }
-                ) 
-            }
+                );  
+            }  
+            setUpdateParams(true);        
         });
     };
 
@@ -77,72 +54,118 @@ const PostListComponent: React.FC = () =>{
         });
     };
 
+    useEffect(()=>{
+        if(!!searchRequest){
+            search();
+        }     
+    }, [searchRequest]);
 
-    const updateValue= (action: Function)=>{
-        action();
-        setRefresh(true);
+    useEffect(()=>{
+        if(didUrlChange()){
+            setUpdateParams(false);
+            setSearchRequest(getRequestFromUrl());
+        }
+    }, [location]);
+
+    
+    const didUrlChange = ()=>{
+        const request = getRequestFromUrl();
+        return !searchRequest?.isEqual(request);
+    };
+
+    const getRequestFromUrl = (): SearchRequest<PostFilterRequest>=>{
+        const defaultPage = 1;
+        const defaultItemsPerPage = 5;
+        const defaultSortField = "CreatedAt";
+    
+        const urlPageQuery = "page";
+        const urlItemsPerPageQuery = "itemsPerPage";
+        const urlSortFieldQuery = "sortField";
+        const urlSortDescendingQuery = "sortDescending";
+        const urlTitleFilterQuery = "title";
+        const urlTagsFilterQuery = "tags";
+        
+        const urlPage = parseInt(searchParams.get(urlPageQuery)) || defaultPage;
+        const urlItemsPerPage = parseInt(searchParams.get(urlItemsPerPageQuery)) || defaultItemsPerPage;
+        const urlTitleFilter = searchParams.get(urlTitleFilterQuery) || "";
+        const urlSortField = searchParams.get(urlSortFieldQuery) || defaultSortField;
+        const urlSortDescending = searchParams.get(urlSortDescendingQuery) == "true";
+        const urlTags = searchParams.getAll(urlTagsFilterQuery);
+
+        return new SearchRequest<PostFilterRequest>(
+            urlPage,
+            urlItemsPerPage, 
+            urlSortField, 
+            urlSortDescending, 
+            new PostFilterRequest(urlTitleFilter, urlTags) 
+        );
     }
 
-    useEffect(()=>{
-        getTags();
-    },[])
+    const updatePage = (page: number)=>{
+        setSearchRequest(searchRequest.updatePage(page));
+    }
 
-    useEffect(()=>{
-        if(refresh){
-            search(page, titleFilter, itemsPerPage, sortField, sortDescending);
-        }
-    }, [refresh]);
+    const updateItemsPerPage = (itemsPerPage: number)=>{
+        setSearchRequest(searchRequest.updateItemsPerPage(itemsPerPage));
+    }
 
-    useEffect(()=>{
-        if(refresh){
-            setRefresh(false);
-            return;
-        }
-        const params = new URLSearchParams(location.search);
-        const urlPage = parseInt(params.get(urlPageQuery)) || defaultPage;
-        const urlItemsPerPage = parseInt(params.get(urlItemsPerPageQuery)) || defaultItemsPerPage;
-        const urlTitleFilter = params.get(urlTitleFilterQuery) || "";
-        const urlSortField = params.get(urlSortFieldQuery) || defaultSortField;
-        const urlSortDescending = params.get(urlSortDescendingQuery) == "true";
-        setPage(urlPage);
-        setItemsPerPage(urlItemsPerPage);
-        setSortField(urlSortField);
-        setSortDescending(urlSortDescending); 
-        setTitleFilter(urlTitleFilter);
-        search(urlPage, urlTitleFilter, urlItemsPerPage, urlSortField, urlSortDescending, false)
-    }, [location])
+    const updateSortField= (sortField: string)=>{
+        setSearchRequest(searchRequest.updateSortField(sortField));
+    }
 
-    const titleFilterChangeHandler = (e:string)=>setTitleFilter(e);
-    const itemsPerPageChangeHandler = (e: number)=>{updateValue(()=>setItemsPerPage(e))}
-    const sortFieldChangeHandler = (e:string)=>{updateValue(()=>setSortField(e))}
-    const sortDescendingChangeHandler = (e:boolean)=>{updateValue(()=>setSortDescending(e))}
-    const selectedTagsChangeHandler = (e:Array<string>)=>{updateValue(()=>setSelectedTags(e))}
+    const updateSortByDecending= (sortByDescending: boolean)=>{
+        setSearchRequest(searchRequest.updateSortByDecending(sortByDescending));
+    }
+
+    const updateFilterByTitle= (filterByTitle: string)=>{
+        const filter = searchRequest.filter;
+        setSearchRequest(searchRequest.updateFilter(filter.updateFilterByTitle(filterByTitle)));
+    }
+
+    const updateFilterByTags= (filterByTags: Array<string>)=>{
+        const filter = searchRequest.filter;
+        setSearchRequest(searchRequest.updateFilter(filter.updateFilterByTags(filterByTags)));
+    }
+
+    
+    const pageChangeHandler = (e: number)=>updatePage(e);
+    const itemsPerPageChangeHandler = (e: number)=>updateItemsPerPage(e);
+    const sortFieldChangeHandler = (e:string)=>updateSortField(e);
+    const sortDescendingChangeHandler = (e:boolean)=>updateSortByDecending(e);
+
+    const titleFilterChangeHandler = (e:string)=>updateFilterByTitle(e);
+    const selectedTagsChangeHandler = (e:Array<string>)=>updateFilterByTags(e);
+
+    
 
     return (
         <section id="post-list-container" className="post-list-container">
-             <PostFilterComponent 
+
+            {
+                (searchRequest!= null && tags != null) ?
+                    <PostFilterComponent 
                         titleFilterChanged={titleFilterChangeHandler}
                         itemsPerPageChanged={itemsPerPageChangeHandler}
                         sortFieldChanged={sortFieldChangeHandler}
                         sortDescendingChanged={sortDescendingChangeHandler}
                         selectedTagsChanged={selectedTagsChangeHandler}
-                        titleFilter={titleFilter}
-                        itemsPerPage={itemsPerPage}
-                        sortField={sortField}
-                        sortDescending={sortDescending}
+                        titleFilter={searchRequest?.filter?.filterByTitle}
+                        itemsPerPage={searchRequest?.itemsPerPage}
+                        sortField={searchRequest?.sortField}
+                        sortDescending={searchRequest?.sortByDescending}
                         tags={tags}
-                        selectedTags={selectedTags}
-                        refresh={setRefresh}/>    
+                        selectedTags={searchRequest?.filter?.filterByTags}/> : <div></div>
+            }
+                
             {             
-                (posts != null && posts.items.length > 0) ? 
-                <div>
-                    
-                    <div id="post-grid" className="post-grid">
+                (searchResponse?.items != null && searchResponse?.items .length > 0) ? 
+                <div id="post-list-content" className="post-list-content">         
+                    <div id="post-list" className="post-list">
                     {
-                        posts.items.map(post=><SummaryPostComponent key={`summary-post-${post.id}`} summaryPost={post}></SummaryPostComponent> )
+                        searchResponse?.items.map(post=><SummaryPostComponent key={`summary-post-${post.id}`} summaryPost={post}></SummaryPostComponent> )
                     }   
                     </div>   
-                    <PaginationComponent page={posts.page} pages={posts.pages} offset={2} onPageChanged={updatePage} />       
+                    <PaginationComponent page={searchResponse.page} pages={searchResponse.pages} offset={2} onPageChanged={pageChangeHandler} />       
                 </div> : <div>There is nothing here</div>
             }
         </section>

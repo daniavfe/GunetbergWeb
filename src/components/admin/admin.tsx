@@ -17,7 +17,7 @@ const AdminComponent: React.FC= ()=>{
 
     const [searchRequest, setSearchRequest] = useState<SearchRequest<PostFilterRequest>>(
         new SearchRequest<PostFilterRequest>(
-            false, 1, 10, "CreatedAt", new PostFilterRequest("", [])
+            1, 10, "CreatedAt", true, new PostFilterRequest("", [])
         )
     );
 
@@ -38,58 +38,30 @@ const AdminComponent: React.FC= ()=>{
         });
     };
 
-    const updateItemsPerPage = (itemsPerPage: number)=>{
-        setSearchRequest(
-            new SearchRequest<PostFilterRequest>(
-                searchRequest.sortByDescending, searchRequest.page, itemsPerPage, searchRequest.sortField, 
-                new PostFilterRequest(searchRequest.filter.filterByTitle, searchRequest.filter.filterByTags)
-            )
-        );
+    const updatePage = (page: number)=>{
+        setSearchRequest(searchRequest.updatePage(page));
     }
 
-    const updatePage = (page: number)=>{
-        setSearchRequest(
-            new SearchRequest<PostFilterRequest>(
-                searchRequest.sortByDescending, page, searchRequest.itemsPerPage, searchRequest.sortField, 
-                new PostFilterRequest(searchRequest.filter.filterByTitle, searchRequest.filter.filterByTags)
-            )
-        );
+    const updateItemsPerPage = (itemsPerPage: number)=>{
+        setSearchRequest(searchRequest.updateItemsPerPage(itemsPerPage));
     }
 
     const updateSortField= (sortField: string)=>{
-        setSearchRequest(
-            new SearchRequest<PostFilterRequest>(
-                searchRequest.sortByDescending, searchRequest.page, searchRequest.itemsPerPage, sortField, 
-                new PostFilterRequest(searchRequest.filter.filterByTitle, searchRequest.filter.filterByTags)
-            )
-        );
+        setSearchRequest(searchRequest.updateSortField(sortField));
     }
 
     const updateSortByDecending= (sortByDescending: boolean)=>{
-        setSearchRequest(
-            new SearchRequest<PostFilterRequest>(
-                sortByDescending, searchRequest.page, searchRequest.itemsPerPage, searchRequest.sortField, 
-                new PostFilterRequest(searchRequest.filter.filterByTitle, searchRequest.filter.filterByTags)
-            )
-        );
+        setSearchRequest(searchRequest.updateSortByDecending(sortByDescending));
     }
 
     const updateFilterByTitle= (filterByTitle: string)=>{
-        setSearchRequest(
-            new SearchRequest<PostFilterRequest>(
-                searchRequest.sortByDescending, searchRequest.page, searchRequest.itemsPerPage, searchRequest.sortField, 
-                new PostFilterRequest(filterByTitle, searchRequest.filter.filterByTags)
-            )
-        );
+        const filter = searchRequest.filter;
+        setSearchRequest(searchRequest.updateFilter(filter.updateFilterByTitle(filterByTitle)));
     }
 
     const updateFilterByTags= (filterByTags: Array<string>)=>{
-        setSearchRequest(
-            new SearchRequest<PostFilterRequest>(
-                searchRequest.sortByDescending, searchRequest.page, searchRequest.itemsPerPage, searchRequest.sortField, 
-                new PostFilterRequest(searchRequest.filter.filterByTitle, filterByTags)
-            )
-        );
+        const filter = searchRequest.filter;
+        setSearchRequest(searchRequest.updateFilter(filter.updateFilterByTags(filterByTags)));
     }
 
     useEffect(()=>{
@@ -102,19 +74,6 @@ const AdminComponent: React.FC= ()=>{
             <h1>Admin</h1>
             <div>
                 <div>
-                <PostFilterComponent 
-                        titleFilterChanged={updateFilterByTitle}
-                        itemsPerPageChanged={updateItemsPerPage}
-                        sortFieldChanged={updateSortField}
-                        sortDescendingChanged={updateSortByDecending}
-                        selectedTagsChanged={updateFilterByTags}
-                        titleFilter={searchRequest.filter.filterByTitle}
-                        itemsPerPage={searchRequest.itemsPerPage}
-                        sortField={searchRequest.sortField}
-                        sortDescending={searchRequest.sortByDescending}
-                        tags={tags}
-                        selectedTags={searchRequest.filter.filterByTags}
-                        refresh={search}/> 
                 </div>
                 {
                     (searchResponse != null) ?

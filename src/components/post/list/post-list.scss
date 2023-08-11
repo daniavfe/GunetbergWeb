@@ -7,7 +7,15 @@
     column-gap: 1em;
 }
 
-.post-grid{
+.post-list-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-grow: 1;
+}
+
+.post-list{
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     column-gap: 10px;

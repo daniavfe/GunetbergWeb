@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Tag from "../../../../model/tag/tag";
 import "./filter.scss"
 
@@ -13,8 +12,7 @@ interface PostFilterProps{
     sortField:string,
     sortDescending: boolean,
     tags:Array<Tag>,
-    selectedTags:Array<string>,
-    refresh:Function
+    selectedTags:Array<string>
 }
 
 const PostFilterComponent: React.FC<PostFilterProps> = ({
@@ -29,20 +27,16 @@ const PostFilterComponent: React.FC<PostFilterProps> = ({
         sortDescending,
         tags,
         selectedTags,
-        refresh 
     }) => {
 
-    const [filterSelectedtags, _] = useState<Array<string>>([]);
-
-    const addSelectedTag = (tagId: string)=>{
-        const index = filterSelectedtags.indexOf(tagId);
+    const addSelectedTag = (tagId: string)=>{       
+        const index = selectedTags.indexOf(tagId);     
         if(index >= 0){
-            filterSelectedtags.splice(index, 1);
+            selectedTags.splice(index, 1)
+            selectedTagsChanged([...selectedTags]);
         }else{
-            filterSelectedtags.push(tagId);
+            selectedTagsChanged([...selectedTags, tagId]);
         }
-        console.log(filterSelectedtags);
-        selectedTagsChanged(filterSelectedtags);
     }
  
     return (
@@ -64,7 +58,7 @@ const PostFilterComponent: React.FC<PostFilterProps> = ({
                     <option value="Language">Language</option>
                 </select>
 
-                <select className="simple-select" value={sortDescending.toString()} onChange={(e)=>{sortDescendingChanged(e.target.value == "true")}}>
+                <select className="simple-select" value={sortDescending.toString()} onChange={(e)=>{sortDescendingChanged(e.target.value)}}>
                     <option value="true">Descending</option>
                     <option value="false">Ascending</option>
                 </select>
@@ -74,13 +68,11 @@ const PostFilterComponent: React.FC<PostFilterProps> = ({
                 {
                     tags.map(it => 
                         <span key={`tag-${it.id}`} className="selectable-chip">
-                            <input id={`${it.id}-id`} type="checkbox" value={it.id} onChange={(e)=>addSelectedTag(e.target.value)}/>
+                            <input id={`${it.id}-id`} type="checkbox" value={it.id} checked={selectedTags.includes(it.id)} onChange={(e)=>addSelectedTag(e.target.value)}/>
                             <label htmlFor={`${it.id}-id`}>{it.name}</label>
                         </span>)
                 }
                 </div>
-
-                <button className="simple-button" onClick={()=>refresh(true)}>Search</button>
             </div>
         </aside>
     );

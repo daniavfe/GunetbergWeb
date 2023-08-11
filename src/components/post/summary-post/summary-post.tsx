@@ -33,7 +33,7 @@ const SummaryPostComponent: React.FC<SummaryPostProps> = ({summaryPost})=>{
             </div>
             <div className="tag-list">
                 {
-                    summaryPost.tags.map(tag=><span className="tag">{tag.name}</span>)
+                    summaryPost.tags.map(tag=><span key={`post-tag-id-${tag.id}`} className="tag">{tag.name}</span>)
                 }
             </div>
         </div>
