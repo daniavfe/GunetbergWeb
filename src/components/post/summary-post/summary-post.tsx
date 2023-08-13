@@ -13,7 +13,7 @@ const SummaryPostComponent: React.FC<SummaryPostProps> = ({summaryPost})=>{
 
     const loadDetailPost: React.MouseEventHandler<HTMLDivElement> = (e) =>{
         e.preventDefault();
-        navigate(`/posts/${summaryPost.id}`);
+        navigate(`/posts/${summaryPost.title.replace(/ /g,"-").toLowerCase()}`);
     }
 
     return (

@@ -4,13 +4,17 @@ import SearchResult from "../model/common/searchResult";
 import PostFilterRequest from "../model/post/postFilterRequest";
 import SummaryPost from "../model/post/summaryPost";
 import { apiClient } from "./apiClient";
-import CompletePost from "../model/post/completePost";
-import CreatePostRequest from "../model/post/createPostRequest";
 import AdminPost from "../model/post/adminPost";
-import UpdatePostRequest from "../model/post/updatePostRequest";
+import CreateOrUpdatePostRequest from "../model/post/createOrUpdatePostRequest";
+import UpdatePost from "../model/post/updatePost";
+import CompletePost from "../model/post/completePost";
 
-const getPost = (id: string): Promise<AxiosResponse<CompletePost>> => {
-    return apiClient.get<CompletePost>(`/posts/${id}`)
+const getUpdatePost = (id: string): Promise<AxiosResponse<UpdatePost>> => {
+    return apiClient.get<UpdatePost>(`/posts/${id}`)
+};
+
+const getPost = (title: string): Promise<AxiosResponse<CompletePost>> => {
+    return apiClient.get<CompletePost>(`/posts?title=${title}`)
 };
 
 const searchPosts = (searchRequest: SearchRequest<PostFilterRequest>): Promise<AxiosResponse<SearchResult<SummaryPost>>> => {
@@ -21,15 +25,16 @@ const searchAdminPosts = (searchRequest: SearchRequest<PostFilterRequest>): Prom
     return apiClient.post<SearchResult<AdminPost>>("/posts/admin/search", searchRequest);
 };
 
-const createPost = (createPostRequest: CreatePostRequest): Promise<AxiosResponse<string>> =>{
-     return apiClient.post<string>("/posts", createPostRequest);
+const createPost = (createOrUpdatePostRequest: CreateOrUpdatePostRequest): Promise<AxiosResponse<string>> =>{
+     return apiClient.post<string>("/posts", createOrUpdatePostRequest);
 };
 
-const updatePost = (id: string, updatePostRequest: UpdatePostRequest): Promise<AxiosResponse> =>{
-    return apiClient.put(`/posts/${id}`, updatePostRequest);
+const updatePost = (id: string, createOrUpdatePostRequest: CreateOrUpdatePostRequest): Promise<AxiosResponse> =>{
+    return apiClient.put(`/posts/${id}`, createOrUpdatePostRequest);
 };
 
 export const postApiClient = {
+    getUpdatePost: getUpdatePost,
     getPost: getPost,
     searchPosts: searchPosts,
     searchAdminPosts: searchAdminPosts,

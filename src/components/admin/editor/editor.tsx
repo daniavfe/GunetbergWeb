@@ -3,32 +3,52 @@ import { useEffect, useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "./editor.scss";
-import CreatePostRequest from "../../../model/post/createPostRequest";
+import CreateOrUpdatePostRequest from "../../../model/post/createOrUpdatePostRequest";
 import { AxiosResponse, post } from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import CompletePost from "../../../model/post/completePost";
-import UpdatePostRequest from "../../../model/post/updatePostRequest";
 import { postApiClient } from "../../../api/postApiClient";
+import ImageSelectorComponent from "./image-selector/image-selector";
+import { tagApiClient } from "../../../api/tagApiClient";
+import Tag from "../../../model/tag/tag";
+import UpdatePost from "../../../model/post/updatePost";
 
 
 const EditorComponent: React.FC = ()=>{
 
-    const navigate = useNavigate();
     const {id} = useParams();
     
     const [isCreationMode, setIsCreationMode] = useState<boolean>(true);
-    const [title, setTitle] = useState<string>("");
-    const [imageUrl, setImageUrl] = useState<string>("");
     const [editorState, setEditorState] = useState<EditorState>(null);
+    const [tags, setTags] = useState<Array<Tag>>(null);
+    const [createOrUpdatePostRequest, setCreateOrUpdatePostRequest] = useState<CreateOrUpdatePostRequest>(null);
+
+    useEffect(()=>{
+        retrieveTags();
+        setEditorState(EditorState.createEmpty());
+        setCreateOrUpdatePostRequest(
+            new CreateOrUpdatePostRequest("", "", "", "", [], "")
+        );
+        if(!!id){
+            loadPost(id);
+        }
+    }, []);
 
     const loadPost = (postId: string)=>{
-        postApiClient.getPost(postId)
-            .then((response:AxiosResponse<CompletePost>)=>{
+        postApiClient.getUpdatePost(postId)
+            .then((response:AxiosResponse<UpdatePost>)=>{
                 const post = response.data;
-                setTitle(post.title);
-                setImageUrl(post.imageUrl);
                 setIsCreationMode(false);
                 setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(post.content))));
+                setCreateOrUpdatePostRequest(
+                    new CreateOrUpdatePostRequest(
+                        post.title,
+                        post.language,
+                        post.imageUrl,
+                        post.summary,
+                        post.tags,
+                        post.content
+                    )
+                );
             })
             .catch(()=>{
                 console.log("Something happened");
@@ -37,7 +57,7 @@ const EditorComponent: React.FC = ()=>{
 
     const save = ()=>{
         if(isCreationMode){
-            postApiClient.createPost(new CreatePostRequest(title, "es-es", imageUrl, JSON.stringify(convertToRaw(editorState.getCurrentContent()))))
+            postApiClient.createPost(createOrUpdatePostRequest)
                 .then((response: AxiosResponse<string>)=>{
                     console.log("CREATED");
                     loadPost(response.data);
@@ -48,12 +68,7 @@ const EditorComponent: React.FC = ()=>{
         }else {
             postApiClient.updatePost(
                 id, 
-                new UpdatePostRequest(
-                    title, 
-                    "es-es", 
-                    imageUrl, 
-                    JSON.stringify(convertToRaw(editorState.getCurrentContent())), []
-                )
+                createOrUpdatePostRequest
             ).then((response: AxiosResponse)=>{
                 console.log("UPDATED");
                 loadPost(id);
@@ -65,29 +80,87 @@ const EditorComponent: React.FC = ()=>{
         }
     };
 
-    useEffect(()=>{
-        if(!id){
-            setEditorState(EditorState.createEmpty());
-            return;
+    const retrieveTags = ()=>{
+        tagApiClient.getTags()
+            .then((response: AxiosResponse<Array<Tag>>)=>{
+                setTags(response.data);
+        });
+    };
+
+    const addSelectedTag = (tagId: string)=>{       
+        const index = createOrUpdatePostRequest.tags.indexOf(tagId);     
+        if(index >= 0){
+            createOrUpdatePostRequest.tags.splice(index, 1);
+            setCreateOrUpdatePostRequest(createOrUpdatePostRequest.updateTags([...createOrUpdatePostRequest.tags]));
+        }else{
+            console.log([...createOrUpdatePostRequest.tags, tagId]);
+            setCreateOrUpdatePostRequest(createOrUpdatePostRequest.updateTags([...createOrUpdatePostRequest.tags, tagId]));
         }
-        loadPost(id);
-    }, []);
+
+    }
+
+    const updateTitle= (title:string) =>{
+        setCreateOrUpdatePostRequest(createOrUpdatePostRequest.updateTitle(title));
+    }
+
+    const updateImageUrl= (imageUrl:string) =>{
+        setCreateOrUpdatePostRequest(createOrUpdatePostRequest.updateImageUrl(imageUrl));
+    }
+
+    const updateSummary= (summary:string) =>{
+        setCreateOrUpdatePostRequest(createOrUpdatePostRequest.updateSummary(summary));
+    }
+
+    const updateLanguage= (language:string) =>{
+        setCreateOrUpdatePostRequest(createOrUpdatePostRequest.updateLanguage(language));
+    }
+
+    const updateContent= (editorState:EditorState) =>{
+        setEditorState(editorState);
+        setCreateOrUpdatePostRequest(
+            createOrUpdatePostRequest.updateContent(JSON.stringify(convertToRaw(editorState.getCurrentContent())))
+        );
+    }
 
     return (
-        <div>
+        <section id="editor-container" className="editor-container">
             <h1>Editor</h1>
-            <div>
-            <input type="text" placeholder="Title" value={title} onChange={(e)=>setTitle(e.target.value)}/>
-            <input type="text" placeholder="ImageUrl" value={imageUrl} onChange={(e)=>setImageUrl(e.target.value)}/>
-            <Editor
-                editorState={editorState}
-                toolbarClassName="toolbarClassName"
-                wrapperClassName="wrapperClassName"
-                editorClassName="editor-content"
-                onEditorStateChange={setEditorState}/>
-            </div>
-            <button onClick={save}>Save</button>
-        </div>
+            {
+                (createOrUpdatePostRequest != null)?
+                <div>
+                    <div className="editor-content-header">
+                        <ImageSelectorComponent/>
+                        <input hidden={true} className="simple-input" type="text" placeholder="ImageUrl" value={createOrUpdatePostRequest.imageUrl} onChange={(e)=>updateImageUrl(e.target.value)}/>
+                        <div className="editor-content-header-summary">
+                            <h3>Title</h3>
+                            <input className="simple-input" type="text" placeholder="Title" value={createOrUpdatePostRequest.title} onChange={(e)=>updateTitle(e.target.value)}/>
+                            <h3>Language</h3>
+                            <input className="simple-input" type="text" placeholder="Title" value={createOrUpdatePostRequest.language} onChange={(e)=>updateLanguage(e.target.value)}/>
+                            <h3>Summary</h3>
+                            <textarea className="simple-input summary-editor" value={createOrUpdatePostRequest.summary} onChange={(e)=>updateSummary(e.target.value)}></textarea>
+                            <h3>Tags</h3>
+                            <div className="tag-chip-container">
+                                {
+                                    tags?.map(it=>
+                                    <span key={`tag-${it.id}`} className="selectable-chip">
+                                        <input id={`${it.id}-id`} type="checkbox" value={it.id} checked={createOrUpdatePostRequest.tags.includes(it.id)} onChange={(e)=>addSelectedTag(e.target.value)}/>
+                                        <label htmlFor={`${it.id}-id`}>{it.name}</label></span>)
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <h3>Content</h3>
+                    <Editor
+                        editorState={editorState}
+                        toolbarClassName="toolbarClassName"
+                        wrapperClassName="wrapperClassName"
+                        editorClassName="editor-content"
+                        onEditorStateChange={updateContent}/>
+                    <button className="simple-button" onClick={save}>Save</button>
+                </div>
+                : <div></div>
+            }
+        </section>
     );
 }
 
