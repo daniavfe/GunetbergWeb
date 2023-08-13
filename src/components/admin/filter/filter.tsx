@@ -1,7 +1,7 @@
-import Tag from "../../../../model/tag/tag";
+import Tag from "../../../model/tag/tag";
 import "./filter.scss"
 
-interface PostFilterProps{
+interface AdminPostFilterProps{
     titleFilterChanged: Function;
     itemsPerPageChanged: Function,
     sortFieldChanged: Function,
@@ -12,10 +12,11 @@ interface PostFilterProps{
     sortField:string,
     sortDescending: boolean,
     tags:Array<Tag>,
-    selectedTags:Array<string>
+    selectedTags:Array<string>,
+    search: Function
 }
 
-const PostFilterComponent: React.FC<PostFilterProps> = ({
+const AdminPostFilterComponent: React.FC<AdminPostFilterProps> = ({
         titleFilterChanged,
         itemsPerPageChanged, 
         sortFieldChanged, 
@@ -27,6 +28,7 @@ const PostFilterComponent: React.FC<PostFilterProps> = ({
         sortDescending,
         tags,
         selectedTags,
+        search
     }) => {
 
     const addSelectedTag = (tagId: string)=>{       
@@ -73,10 +75,12 @@ const PostFilterComponent: React.FC<PostFilterProps> = ({
                         </span>)
                 }
                 </div>
+
+                <button className="simple-button" onClick={()=>search()}>Search</button>
             </div>
         </aside>
     );
 }
 
-export default PostFilterComponent
+export default AdminPostFilterComponent
      

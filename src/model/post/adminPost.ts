@@ -5,7 +5,7 @@ export default class AdminPost {
     id: string;
     language: string;
     title: string;
-    createdAt: Date;
+    createdAt: string;
     author: AdminAuthor;
     tags: Array<Tag>;
 }

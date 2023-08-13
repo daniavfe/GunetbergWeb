@@ -19,10 +19,15 @@ code {
 }
 
 .simple-button{
-  border-radius: .5em;
+  border-radius: 1em;
   border: 1px solid #999;
   background: transparent;
   cursor: pointer;
+  padding: 5px 10px;
+}
+
+.simple-button:hover{
+  background: #EEE;
 }
 
 .simple-select {

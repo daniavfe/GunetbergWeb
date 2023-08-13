@@ -1,0 +1,21 @@
+.list-item{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0px;
+    border-bottom: 1px solid #EEE;
+}
+
+.list-item-content{
+    display: flex;
+    flex-direction: column;
+}
+
+.list-item-actions{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: 10px;
+}

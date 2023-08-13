@@ -4,8 +4,6 @@ import PostListComponent from "../post/list/post-list";
 import DetailPostComponent from "../post/detail/detail";
 import LoginComponent from "../login/login";
 
-
-
 import './main.scss'
 import GuardedRouteComponent from "./guarded-route/guarded-route";
 import EditorComponent from "../admin/editor/editor";

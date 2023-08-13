@@ -1,0 +1,21 @@
+.admin-post-list-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    align-items: flex-start;
+    flex-grow: 1;
+    column-gap: 1em;
+}
+
+.admin-post-list-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-grow: 1;
+}
+
+.admin-post-list{
+    display: flex;
+    flex-direction: column;
+}

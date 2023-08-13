@@ -26,6 +26,21 @@ const PostListComponent: React.FC = () =>{
     useEffect(()=>{
         getTags();
     },[]);
+
+    useEffect(()=>{
+        if(!!searchRequest){
+            search();
+        }     
+    }, [searchRequest]);
+
+    useEffect(()=>{
+        if(didUrlChange()){
+            if(searchParams.size>0){
+                setUpdateParams(false);
+            }
+            setSearchRequest(getRequestFromUrl());
+        }
+    }, [location]);
     
     const search = ()=> {
         postApiClient.searchPosts(searchRequest)
@@ -53,20 +68,6 @@ const PostListComponent: React.FC = () =>{
                 setTags(response.data);
         });
     };
-
-    useEffect(()=>{
-        if(!!searchRequest){
-            search();
-        }     
-    }, [searchRequest]);
-
-    useEffect(()=>{
-        if(didUrlChange()){
-            setUpdateParams(false);
-            setSearchRequest(getRequestFromUrl());
-        }
-    }, [location]);
-
     
     const didUrlChange = ()=>{
         const request = getRequestFromUrl();
@@ -140,7 +141,6 @@ const PostListComponent: React.FC = () =>{
 
     return (
         <section id="post-list-container" className="post-list-container">
-
             {
                 (searchRequest!= null && tags != null) ?
                     <PostFilterComponent 
