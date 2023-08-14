@@ -12,7 +12,6 @@ import { tagApiClient } from "../../../api/tagApiClient";
 import Tag from "../../../model/tag/tag";
 import UpdatePost from "../../../model/post/updatePost";
 
-
 const EditorComponent: React.FC = ()=>{
 
     const {id} = useParams();
@@ -129,8 +128,7 @@ const EditorComponent: React.FC = ()=>{
                 (createOrUpdatePostRequest != null)?
                 <div>
                     <div className="editor-content-header">
-                        <ImageSelectorComponent/>
-                        <input hidden={true} className="simple-input" type="text" placeholder="ImageUrl" value={createOrUpdatePostRequest.imageUrl} onChange={(e)=>updateImageUrl(e.target.value)}/>
+                        <ImageSelectorComponent value={createOrUpdatePostRequest.imageUrl} onChange={(e)=>updateImageUrl(e)}/>
                         <div className="editor-content-header-summary">
                             <h3>Title</h3>
                             <input className="simple-input" type="text" placeholder="Title" value={createOrUpdatePostRequest.title} onChange={(e)=>updateTitle(e.target.value)}/>

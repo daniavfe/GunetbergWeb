@@ -14,7 +14,6 @@ import { AxiosError, AxiosResponse } from "axios";
 
 const HttpInterceptorSetup = ()=>{
     const axiosApiClient = apiClient;
-
     const navigate = useNavigate();
     const location = useLocation()
 
@@ -24,15 +23,15 @@ const HttpInterceptorSetup = ()=>{
             if(token){
                 config.headers.Authorization = `Bearer ${token}`
             }
-          return config;
+            return config;
         },
         function (error) {
-          // Do something with request error
-          return Promise.reject(error);
+            // Do something with request error
+            return Promise.reject(error);
         }
-      );
+    );
      
-      axiosApiClient.interceptors.response.use(
+    axiosApiClient.interceptors.response.use(
         (response: AxiosResponse)=> {
             return response;
         },
@@ -48,12 +47,10 @@ const HttpInterceptorSetup = ()=>{
     return <></>;
 }
 
-
 const Main: React.FC = ()=>{
-
     return (
         <>
-            <HttpInterceptorSetup/>
+            <HttpInterceptorSetup/>    
             <Routes>
                 <Route path='/admin' element={<GuardedRouteComponent component={<AdminComponent/>}></GuardedRouteComponent>}/>
                 <Route path='/admin/editor/:id?' element={<GuardedRouteComponent component={<EditorComponent/>}></GuardedRouteComponent>}/>
