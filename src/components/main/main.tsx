@@ -11,6 +11,7 @@ import AdminComponent from "../admin/admin";
 import { apiClient } from "../../api/apiClient";
 import { useCookies } from "../../persistence/cookieService";
 import { AxiosError, AxiosResponse } from "axios";
+import NotificationComponent from "../notification/notification";
 
 const HttpInterceptorSetup = ()=>{
     const axiosApiClient = apiClient;
@@ -50,6 +51,7 @@ const HttpInterceptorSetup = ()=>{
 const Main: React.FC = ()=>{
     return (
         <>
+            <NotificationComponent/>
             <HttpInterceptorSetup/>    
             <Routes>
                 <Route path='/admin' element={<GuardedRouteComponent component={<AdminComponent/>}></GuardedRouteComponent>}/>

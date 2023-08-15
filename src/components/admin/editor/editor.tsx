@@ -4,13 +4,15 @@ import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "./editor.scss";
 import CreateOrUpdatePostRequest from "../../../model/post/createOrUpdatePostRequest";
-import { AxiosResponse, post } from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { AxiosResponse } from "axios";
+import { useParams } from "react-router-dom";
 import { postApiClient } from "../../../api/postApiClient";
 import ImageSelectorComponent from "./image-selector/image-selector";
 import { tagApiClient } from "../../../api/tagApiClient";
 import Tag from "../../../model/tag/tag";
 import UpdatePost from "../../../model/post/updatePost";
+import ModalComponent from "../../modal/modal";
+import { Notification, NotificationKind, eventBus } from "../../notification/notification";
 
 const EditorComponent: React.FC = ()=>{
 
@@ -20,6 +22,7 @@ const EditorComponent: React.FC = ()=>{
     const [editorState, setEditorState] = useState<EditorState>(null);
     const [tags, setTags] = useState<Array<Tag>>(null);
     const [createOrUpdatePostRequest, setCreateOrUpdatePostRequest] = useState<CreateOrUpdatePostRequest>(null);
+    const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
 
     useEffect(()=>{
         retrieveTags();
@@ -55,28 +58,29 @@ const EditorComponent: React.FC = ()=>{
     }
 
     const save = ()=>{
+        setShowConfirmationModal(false);
+
         if(isCreationMode){
             postApiClient.createPost(createOrUpdatePostRequest)
                 .then((response: AxiosResponse<string>)=>{
-                    console.log("CREATED");
                     loadPost(response.data);
+                    eventBus.invoke(new Notification("Post created", NotificationKind.Success));
                 })
                 .catch(()=>{
-                    console.log("Error");
+                    eventBus.invoke(new Notification("Error while creating post", NotificationKind.Error));
                 });
         }else {
             postApiClient.updatePost(
                 id, 
                 createOrUpdatePostRequest
             ).then((response: AxiosResponse)=>{
-                console.log("UPDATED");
                 loadPost(id);
+                eventBus.invoke(new Notification("Post updated", NotificationKind.Success));
             })
-            .catch(()=>{
-                
-                console.log("Error");
+            .catch(()=>{            
+                eventBus.invoke(new Notification("Error while updating post", NotificationKind.Error));
             });
-        }
+        } 
     };
 
     const retrieveTags = ()=>{
@@ -126,7 +130,7 @@ const EditorComponent: React.FC = ()=>{
             <h1>Editor</h1>
             {
                 (createOrUpdatePostRequest != null)?
-                <div>
+                <div className="editor-content">
                     <div className="editor-content-header">
                         <ImageSelectorComponent value={createOrUpdatePostRequest.imageUrl} onChange={(e)=>updateImageUrl(e)}/>
                         <div className="editor-content-header-summary">
@@ -147,16 +151,24 @@ const EditorComponent: React.FC = ()=>{
                             </div>
                         </div>
                     </div>
-                    <h3>Content</h3>
                     <Editor
                         editorState={editorState}
-                        toolbarClassName="toolbarClassName"
-                        wrapperClassName="wrapperClassName"
                         editorClassName="editor-content"
                         onEditorStateChange={updateContent}/>
-                    <button className="simple-button" onClick={save}>Save</button>
+                    <button className="simple-button" onClick={()=>{setShowConfirmationModal(true)}}>Save</button>
                 </div>
                 : <div></div>
+            }
+            {
+            <ModalComponent isVisible={showConfirmationModal} setIsVisible={setShowConfirmationModal} allowCloseOnOutClick={true}>
+                <div className="editor-confirmation-modal">
+                    <p>Post will be updated. Do you want to continue?</p>
+                    <div className="editor-confirmation-modal-actions">
+                        <button className="simple-button" onClick={save}>Accept</button> 
+                        <button className="simple-button" onClick={()=>setShowConfirmationModal(false)}>Cancel</button>
+                    </div>
+                </div>
+            </ModalComponent>
             }
         </section>
     );

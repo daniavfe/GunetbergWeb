@@ -24,12 +24,37 @@
 }
 
 .editor-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    row-gap: 20px;
+}
+
+.editor-content-text{
     background: #EEE;
     border-radius: .5em;
-    padding: 10px;
+    padding: 0px 10px;
 }
 
 .summary-editor{
     height: 100px;
     resize: none;
+}
+
+.editor-confirmation-modal{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    row-gap: 10px;
+}
+
+.editor-confirmation-modal-actions{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    column-gap: 10px;
+
 }
