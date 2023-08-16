@@ -6,4 +6,16 @@ export default class AuthorizationRequest{
         this.email = email;
         this.password = password;
     }
+
+    updateEmail(email:string): AuthorizationRequest{
+        return new AuthorizationRequest(email, this.password);
+    }
+
+    updatePassword(password:string): AuthorizationRequest{
+        return new AuthorizationRequest(this.email, password);
+    }
+
+    isCorrect(): boolean {
+        return !!this.email && !!this.password;
+    }
 }

@@ -16,6 +16,7 @@ import { eventBus } from "../../event-bus/event-bus";
 import { Notification } from "../../model/notification/notification";
 import { NotificationKind } from "../../model/notification/notification-kind";
 import ModalComponent from "../modal/modal";
+import PageComponent from "../page/page";
 
 const AdminComponent: React.FC= ()=>{
 
@@ -160,50 +161,52 @@ const AdminComponent: React.FC= ()=>{
     }
 
     return (
-        <section id="admin-post-list-container" className="admin-post-list-container">
-            {
-            (searchRequest!= null && tags != null) ?
-            <AdminPostFilterComponent
-                titleFilterChanged={updateFilterByTitle}
-                itemsPerPageChanged={updateItemsPerPage}
-                sortFieldChanged={updateSortField}
-                sortDescendingChanged={updateSortByDecending}
-                selectedTagsChanged={updateFilterByTags}
-                titleFilter={searchRequest?.filter?.filterByTitle}
-                itemsPerPage={searchRequest?.itemsPerPage}
-                sortField={searchRequest?.sortField}
-                sortDescending={searchRequest?.sortByDescending}
-                tags={tags}
-                selectedTags={searchRequest?.filter?.filterByTags}
-                search={()=>setReload(true)}/> : <div></div>
-            }
-            {
-                (searchResponse?.items != null && searchResponse?.items .length > 0) ?
-                <div className="admin-post-list-content">
-                    <div className="admin-post-list">
-                    {
-                        searchResponse.items.map(post=>
-                        <ListItemComponent key={`admin-post-${post.id}`} 
-                        post={post} 
-                        editionAction={()=>navigate(`/admin/editor/${post.id}`)} 
-                        deleteAction={()=>showDeleteConfirmationModal(post)}/>)
-                    }
-                    </div>
-                    <ModalComponent isVisible={showConfirmationModal} setIsVisible={setShowConfirmationModal} allowCloseOnOutClick={true}>
-                        { (postToDelete != null)?
-                        <div className="editor-confirmation-modal">
-                            <p>Post {postToDelete.id} will be removed. Do you want to continue?</p>
-                            <div className="editor-confirmation-modal-actions">
-                                <button className="simple-button" onClick={()=>deletePost(postToDelete.id)}>Accept</button> 
-                                <button className="simple-button" onClick={()=>setShowConfirmationModal(false)}>Cancel</button>
-                            </div>
-                        </div>: <div></div>
+        <PageComponent>
+            <section id="admin-post-list-container" className="admin-post-list-container">
+                {
+                (searchRequest!= null && tags != null) ?
+                <AdminPostFilterComponent
+                    titleFilterChanged={updateFilterByTitle}
+                    itemsPerPageChanged={updateItemsPerPage}
+                    sortFieldChanged={updateSortField}
+                    sortDescendingChanged={updateSortByDecending}
+                    selectedTagsChanged={updateFilterByTags}
+                    titleFilter={searchRequest?.filter?.filterByTitle}
+                    itemsPerPage={searchRequest?.itemsPerPage}
+                    sortField={searchRequest?.sortField}
+                    sortDescending={searchRequest?.sortByDescending}
+                    tags={tags}
+                    selectedTags={searchRequest?.filter?.filterByTags}
+                    search={()=>setReload(true)}/> : <div></div>
+                }
+                {
+                    (searchResponse?.items != null && searchResponse?.items .length > 0) ?
+                    <div className="admin-post-list-content">
+                        <div className="admin-post-list">
+                        {
+                            searchResponse.items.map(post=>
+                            <ListItemComponent key={`admin-post-${post.id}`} 
+                            post={post} 
+                            editionAction={()=>navigate(`/admin/editor/${post.id}`)} 
+                            deleteAction={()=>showDeleteConfirmationModal(post)}/>)
                         }
-                    </ModalComponent>
-                    <PaginationComponent page={searchResponse.page} pages={searchResponse.pages} offset={2} onPageChanged={updatePage} /> 
-                </div> : <div>Nothing here</div>
-            }
-        </section>
+                        </div>
+                        <ModalComponent isVisible={showConfirmationModal} setIsVisible={setShowConfirmationModal} allowCloseOnOutClick={true}>
+                            { (postToDelete != null)?
+                            <div className="editor-confirmation-modal">
+                                <p>Post {postToDelete.id} will be removed. Do you want to continue?</p>
+                                <div className="editor-confirmation-modal-actions">
+                                    <button className="simple-button" onClick={()=>deletePost(postToDelete.id)}>Accept</button> 
+                                    <button className="simple-button" onClick={()=>setShowConfirmationModal(false)}>Cancel</button>
+                                </div>
+                            </div>: <div></div>
+                            }
+                        </ModalComponent>
+                        <PaginationComponent page={searchResponse.page} pages={searchResponse.pages} offset={2} onPageChanged={updatePage} /> 
+                    </div> : <div>Nothing here</div>
+                }
+            </section>
+        </PageComponent>
     );
 }
 

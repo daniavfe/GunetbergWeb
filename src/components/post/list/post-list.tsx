@@ -13,6 +13,7 @@ import { postApiClient } from "../../../api/postApiClient";
 import { tagApiClient } from "../../../api/tagApiClient";
 
 import './post-list.scss'
+import PageComponent from "../../page/page";
 
 const PostListComponent: React.FC = () =>{
     
@@ -140,35 +141,37 @@ const PostListComponent: React.FC = () =>{
     
 
     return (
-        <section id="post-list-container" className="post-list-container">
-            {
-                (searchRequest!= null && tags != null) ?
-                    <PostFilterComponent 
-                        titleFilterChanged={titleFilterChangeHandler}
-                        itemsPerPageChanged={itemsPerPageChangeHandler}
-                        sortFieldChanged={sortFieldChangeHandler}
-                        sortDescendingChanged={sortDescendingChangeHandler}
-                        selectedTagsChanged={selectedTagsChangeHandler}
-                        titleFilter={searchRequest?.filter?.filterByTitle}
-                        itemsPerPage={searchRequest?.itemsPerPage}
-                        sortField={searchRequest?.sortField}
-                        sortDescending={searchRequest?.sortByDescending}
-                        tags={tags}
-                        selectedTags={searchRequest?.filter?.filterByTags}/> : <div></div>
-            }
-                
-            {             
-                (searchResponse?.items != null && searchResponse?.items .length > 0) ? 
-                <div id="post-list-content" className="post-list-content">         
-                    <div id="post-list" className="post-list">
-                    {
-                        searchResponse?.items.map(post=><SummaryPostComponent key={`summary-post-${post.id}`} summaryPost={post}></SummaryPostComponent> )
-                    }   
-                    </div>   
-                    <PaginationComponent page={searchResponse.page} pages={searchResponse.pages} offset={2} onPageChanged={pageChangeHandler} />       
-                </div> : <div>There is nothing here</div>
-            }
-        </section>
+        <PageComponent>
+            <section id="post-list-container" className="post-list-container">
+                {
+                    (searchRequest!= null && tags != null) ?
+                        <PostFilterComponent 
+                            titleFilterChanged={titleFilterChangeHandler}
+                            itemsPerPageChanged={itemsPerPageChangeHandler}
+                            sortFieldChanged={sortFieldChangeHandler}
+                            sortDescendingChanged={sortDescendingChangeHandler}
+                            selectedTagsChanged={selectedTagsChangeHandler}
+                            titleFilter={searchRequest?.filter?.filterByTitle}
+                            itemsPerPage={searchRequest?.itemsPerPage}
+                            sortField={searchRequest?.sortField}
+                            sortDescending={searchRequest?.sortByDescending}
+                            tags={tags}
+                            selectedTags={searchRequest?.filter?.filterByTags}/> : <div></div>
+                }
+                    
+                {             
+                    (searchResponse?.items != null && searchResponse?.items .length > 0) ? 
+                    <div id="post-list-content" className="post-list-content">         
+                        <div id="post-list" className="post-list">
+                        {
+                            searchResponse?.items.map(post=><SummaryPostComponent key={`summary-post-${post.id}`} summaryPost={post}></SummaryPostComponent> )
+                        }   
+                        </div>   
+                        <PaginationComponent page={searchResponse.page} pages={searchResponse.pages} offset={2} onPageChanged={pageChangeHandler} />       
+                    </div> : <div>There is nothing here</div>
+                }
+            </section>
+        </PageComponent>
 
     )
 }

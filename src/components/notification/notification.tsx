@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { Notification } from "../../model/notification/notification"
-import "./notification.scss";
 import { eventBus } from "../../event-bus/event-bus";
+import { NotificationKind } from "../../model/notification/notification-kind";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconDefinition, faCircleCheck, faCircleExclamation, faCircleInfo, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import "./notification.scss";
 
 const NotificationComponent: React.FC = ()=>{ 
 
@@ -29,12 +32,28 @@ const NotificationComponent: React.FC = ()=>{
         }
     }
 
+    const getIconFromKind = (kind: NotificationKind): IconDefinition=>{
+        switch(kind){
+            case NotificationKind.Information:  return faCircleInfo;
+            case NotificationKind.Success:  return faCircleCheck;
+            case NotificationKind.Warning:  return faCircleExclamation;
+            case NotificationKind.Error:  return faCircleXmark;
+        }
+    }
+
     return(
         <section id="notification-container" className="notification-container">
             {
                 notifications.map(it=>
                     <div key={`notification-item-${it.id}`} className="notification">
-                        {it.kind} {it.message}
+                        <div className="notification-icon">
+                            <div className={`notification-icon-background background-${NotificationKind[it.kind].toLowerCase()}`}>
+                                <FontAwesomeIcon icon={getIconFromKind(it.kind)}/>
+                            </div>
+                        </div>
+                        <div className="notification-content">
+                            <p>{it.message}</p>
+                        </div>
                     </div>
                 )
             }

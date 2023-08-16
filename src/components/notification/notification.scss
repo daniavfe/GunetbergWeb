@@ -15,6 +15,43 @@
 .notification {
     background: #FFF;
     padding: 10px;
-    border-radius: .5em;
+    border-radius: 1em;
     border: 1px solid #EEE;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    column-gap: 10px;
+}
+
+.notification-icon-background{
+    width: 35px;
+    height: 35px;
+    background: #EEE;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2em;
+}
+
+.background-information {
+    background: #e6f3ff;
+    color: #428bcf;
+}
+
+.background-success {
+    background: #e7fff5;
+    color: #4cc492;
+}
+
+.background-warning {
+    background: #ffffe0;
+    color: #dda631;
+}
+
+.background-error {
+    background: #ffe7e7;
+    color: #c54747;
 }

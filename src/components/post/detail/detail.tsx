@@ -7,6 +7,7 @@ import { postApiClient } from "../../../api/postApiClient";
 import {EditorState, convertFromRaw } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "./detail.scss"
+import PageComponent from "../../page/page";
 
 
 const DetailPostComponent: React.FC = () => {
@@ -26,28 +27,30 @@ const DetailPostComponent: React.FC = () => {
 
     
     return (
-        <section id="post-detail" className="post-detail">
-            {
-                post != null ? 
-                <div>
-                    <div className="post-header">
-                        <div className="post-header-image">
-                            <img src={post.imageUrl}></img>
+        <PageComponent>
+            <section id="post-detail" className="post-detail">
+                {
+                    post != null ? 
+                    <div>
+                        <div className="post-header">
+                            <div className="post-header-image">
+                                <img src={post.imageUrl}></img>
+                            </div>
+                            <div className="post-header-opacity"></div>
+                            <div className="post-header-content">
+                                <h1>{post.title}</h1>
+                            </div>
                         </div>
-                        <div className="post-header-opacity"></div>
-                        <div className="post-header-content">
-                            <h1>{post.title}</h1>
-                        </div>
-                    </div>
-                    <Editor
-                        editorState={editorState}
-                        readOnly={true}
-                        toolbarHidden={true}/> 
-                    <AuthorComponent author={post.author}></AuthorComponent>
-                </div> : 
-                <div>No post loaded</div>
-            }
-        </section>
+                        <Editor
+                            editorState={editorState}
+                            readOnly={true}
+                            toolbarHidden={true}/> 
+                        <AuthorComponent author={post.author}></AuthorComponent>
+                    </div> : 
+                    <div>No post loaded</div>
+                }
+            </section>
+        </PageComponent>
     )
 }
 

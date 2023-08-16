@@ -15,6 +15,7 @@ import ModalComponent from "../../modal/modal";
 import { eventBus } from "../../../event-bus/event-bus";
 import { Notification } from "../../../model/notification/notification";
 import { NotificationKind } from "../../../model/notification/notification-kind";
+import PageComponent from "../../page/page";
 
 const EditorComponent: React.FC = ()=>{
 
@@ -128,51 +129,53 @@ const EditorComponent: React.FC = ()=>{
     }
 
     return (
-        <section id="editor-container" className="editor-container">
-            <h1>Editor</h1>
-            {
-                (createOrUpdatePostRequest != null)?
-                <div className="editor-content">
-                    <div className="editor-content-header">
-                        <ImageSelectorComponent value={createOrUpdatePostRequest.imageUrl} onChange={(e)=>updateImageUrl(e)}/>
-                        <div className="editor-content-header-summary">
-                            <h3>Title</h3>
-                            <input className="simple-input" type="text" placeholder="Title" value={createOrUpdatePostRequest.title} onChange={(e)=>updateTitle(e.target.value)}/>
-                            <h3>Language</h3>
-                            <input className="simple-input" type="text" placeholder="Title" value={createOrUpdatePostRequest.language} onChange={(e)=>updateLanguage(e.target.value)}/>
-                            <h3>Summary</h3>
-                            <textarea className="simple-input summary-editor" value={createOrUpdatePostRequest.summary} onChange={(e)=>updateSummary(e.target.value)}></textarea>
-                            <h3>Tags</h3>
-                            <div className="tag-chip-container">
-                                {
-                                    tags?.map(it=>
-                                    <span key={`tag-${it.id}`} className="selectable-chip">
-                                        <input id={`${it.id}-id`} type="checkbox" value={it.id} checked={createOrUpdatePostRequest.tags.includes(it.id)} onChange={(e)=>addSelectedTag(e.target.value)}/>
-                                        <label htmlFor={`${it.id}-id`}>{it.name}</label></span>)
-                                }
+        <PageComponent>
+            <section id="editor-container" className="editor-container">
+                <h1>Editor</h1>
+                {
+                    (createOrUpdatePostRequest != null)?
+                    <div className="editor-content">
+                        <div className="editor-content-header">
+                            <ImageSelectorComponent value={createOrUpdatePostRequest.imageUrl} onChange={(e)=>updateImageUrl(e)}/>
+                            <div className="editor-content-header-summary">
+                                <h3>Title</h3>
+                                <input className="simple-input" type="text" placeholder="Title" value={createOrUpdatePostRequest.title} onChange={(e)=>updateTitle(e.target.value)}/>
+                                <h3>Language</h3>
+                                <input className="simple-input" type="text" placeholder="Title" value={createOrUpdatePostRequest.language} onChange={(e)=>updateLanguage(e.target.value)}/>
+                                <h3>Summary</h3>
+                                <textarea className="simple-input summary-editor" value={createOrUpdatePostRequest.summary} onChange={(e)=>updateSummary(e.target.value)}></textarea>
+                                <h3>Tags</h3>
+                                <div className="tag-chip-container">
+                                    {
+                                        tags?.map(it=>
+                                        <span key={`tag-${it.id}`} className="selectable-chip">
+                                            <input id={`${it.id}-id`} type="checkbox" value={it.id} checked={createOrUpdatePostRequest.tags.includes(it.id)} onChange={(e)=>addSelectedTag(e.target.value)}/>
+                                            <label htmlFor={`${it.id}-id`}>{it.name}</label></span>)
+                                    }
+                                </div>
                             </div>
                         </div>
+                        <Editor
+                            editorState={editorState}
+                            editorClassName="editor-content"
+                            onEditorStateChange={updateContent}/>
+                        <button className="simple-button" onClick={()=>{setShowConfirmationModal(true)}}>Save</button>
                     </div>
-                    <Editor
-                        editorState={editorState}
-                        editorClassName="editor-content"
-                        onEditorStateChange={updateContent}/>
-                    <button className="simple-button" onClick={()=>{setShowConfirmationModal(true)}}>Save</button>
-                </div>
-                : <div></div>
-            }
-            
-            <ModalComponent isVisible={showConfirmationModal} setIsVisible={setShowConfirmationModal} allowCloseOnOutClick={true}>
-                <div className="editor-confirmation-modal">
-                    <p>Post will be updated. Do you want to continue?</p>
-                    <div className="editor-confirmation-modal-actions">
-                        <button className="simple-button" onClick={save}>Accept</button> 
-                        <button className="simple-button" onClick={()=>setShowConfirmationModal(false)}>Cancel</button>
+                    : <div></div>
+                }
+                
+                <ModalComponent isVisible={showConfirmationModal} setIsVisible={setShowConfirmationModal} allowCloseOnOutClick={true}>
+                    <div className="editor-confirmation-modal">
+                        <p>Post will be updated. Do you want to continue?</p>
+                        <div className="editor-confirmation-modal-actions">
+                            <button className="simple-button" onClick={save}>Accept</button> 
+                            <button className="simple-button" onClick={()=>setShowConfirmationModal(false)}>Cancel</button>
+                        </div>
                     </div>
-                </div>
-            </ModalComponent>
-            
-        </section>
+                </ModalComponent>
+                
+            </section>
+        </PageComponent>
     );
 }
 
