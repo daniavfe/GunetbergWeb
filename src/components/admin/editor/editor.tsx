@@ -12,7 +12,9 @@ import { tagApiClient } from "../../../api/tagApiClient";
 import Tag from "../../../model/tag/tag";
 import UpdatePost from "../../../model/post/updatePost";
 import ModalComponent from "../../modal/modal";
-import { Notification, NotificationKind, eventBus } from "../../notification/notification";
+import { eventBus } from "../../../event-bus/event-bus";
+import { Notification } from "../../../model/notification/notification";
+import { NotificationKind } from "../../../model/notification/notification-kind";
 
 const EditorComponent: React.FC = ()=>{
 
@@ -159,7 +161,7 @@ const EditorComponent: React.FC = ()=>{
                 </div>
                 : <div></div>
             }
-            {
+            
             <ModalComponent isVisible={showConfirmationModal} setIsVisible={setShowConfirmationModal} allowCloseOnOutClick={true}>
                 <div className="editor-confirmation-modal">
                     <p>Post will be updated. Do you want to continue?</p>
@@ -169,7 +171,7 @@ const EditorComponent: React.FC = ()=>{
                     </div>
                 </div>
             </ModalComponent>
-            }
+            
         </section>
     );
 }

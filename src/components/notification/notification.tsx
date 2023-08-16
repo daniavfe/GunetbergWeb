@@ -1,64 +1,40 @@
 import { useEffect, useState } from "react";
-import {v4 as uuidv4} from "uuid"
-
-export enum NotificationKind {
-    Information,
-    Success,
-    Warning,
-    Error
-}
-
-export class Notification {
-    id: string;
-    message: string;
-    kind: NotificationKind;
-    createdAt: Date;
-
-
-    constructor(message:string, kind: NotificationKind){
-        this.id = uuidv4();
-        this.message = message;
-        this.kind = kind;
-        this.createdAt = new Date();
-    }
-}
-
-const subscriptions: Array<Function> = [];
-
-const subscribe = (e: Function)=>{
-    subscriptions.push(e);
-}
-
-const invoke = (notification: Notification)=>{   
-    for(const subscription of subscriptions){
-        subscription(notification);
-    }
-}
-
-export const eventBus = {
-    subscribe: subscribe,
-    invoke: invoke
-}
+import { Notification } from "../../model/notification/notification"
+import "./notification.scss";
+import { eventBus } from "../../event-bus/event-bus";
 
 const NotificationComponent: React.FC = ()=>{ 
 
     const [notifications, setNotifications] = useState<Array<Notification>>([]);
 
-    const onNotificationReceived = (notification: Notification)=>{      
-        notifications.push(notification);
-        setNotifications([...notifications]);
-    };
-
     useEffect(()=>{
         eventBus.subscribe(onNotificationReceived);
     }, []);
+
+    useEffect(()=>{
+        console.log(notifications);
+    }, [notifications]);
+
+    const onNotificationReceived = (notification: Notification)=>{      
+        notifications.push(notification);
+        setTimeout(()=>closeNotification(notification), 5000);
+        setNotifications([...notifications]);
+    };
+
+    const closeNotification = (notification:Notification)=>{
+        var index = notifications.indexOf(notification);
+        if(index >= 0){
+            notifications.splice(index, 1);
+            setNotifications([...notifications]);;
+        }
+    }
 
     return(
         <section id="notification-container" className="notification-container">
             {
                 notifications.map(it=>
                     <div key={`notification-item-${it.id}`} className="notification">
-                        {it.kind} {it.message} {it.createdAt.toString()}
+                        {it.kind} {it.message}
                     </div>
                 )
             }

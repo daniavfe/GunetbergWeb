@@ -33,6 +33,10 @@ const updatePost = (id: string, createOrUpdatePostRequest: CreateOrUpdatePostReq
     return apiClient.put(`/posts/${id}`, createOrUpdatePostRequest);
 };
 
+const deletePost = (id: string) =>{
+    return apiClient.delete(`/posts/${id}`);
+}
+
 export const postApiClient = {
     getUpdatePost: getUpdatePost,
     getPost: getPost,
@@ -40,4 +44,5 @@ export const postApiClient = {
     searchAdminPosts: searchAdminPosts,
     createPost: createPost,
     updatePost: updatePost,
+    deletePost: deletePost
 }
