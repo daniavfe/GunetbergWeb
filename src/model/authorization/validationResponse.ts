@@ -1,3 +1,3 @@
-export default class ValidationResponse{
-    public isValid: boolean;
+export default class ValidationResponse {
+	public isValid: boolean;
 }

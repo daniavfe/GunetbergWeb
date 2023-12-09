@@ -1,3 +1,3 @@
-export default class AuthorizationResponse{
-    token: string;
+export default class AuthorizationResponse {
+	token: string;
 }

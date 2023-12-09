@@ -1,11 +1,11 @@
-import { AxiosResponse } from "axios";
+import { type AxiosResponse } from "axios";
 import { apiClient } from "./apiClient";
-import Tag from "../model/tag/tag";
+import type Tag from "../model/tag/tag";
 
-const getTags = ():Promise<AxiosResponse<Array<Tag>>> => {
-    return apiClient.get<Array<Tag>>("/tags");
-}
+const getTags = async (): Promise<AxiosResponse<Tag[]>> => {
+	return await apiClient.get<Tag[]>("/tags");
+};
 
 export const tagApiClient = {
-    getTags: getTags
-}
+	getTags
+};

@@ -1,22 +1,22 @@
 import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
-const tokenKey:string = "authToken";
+const tokenKey: string = "authToken";
 
-const getToken = ()=>{
-    return cookies.get(tokenKey);
+const getToken = () => {
+	return cookies.get(tokenKey);
 };
 
-const setToken =(token:string)=>{
-    cookies.set(tokenKey, token);
+const setToken = (token: string) => {
+	cookies.set(tokenKey, token);
 };
 
-const removeToken = ()=>{
-    cookies.remove(tokenKey);
+const removeToken = () => {
+	cookies.remove(tokenKey);
 };
 
 export const useCookies = {
-    getToken:getToken,
-    setToken: setToken,
-    removeToken: removeToken
-}
+	getToken,
+	setToken,
+	removeToken
+};

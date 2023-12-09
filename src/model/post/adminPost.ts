@@ -1,11 +1,11 @@
-import AdminAuthor from "../author/adminAuthor";
-import Tag from "../tag/tag";
+import type AdminAuthor from "../author/adminAuthor";
+import type Tag from "../tag/tag";
 
 export default class AdminPost {
-    id: string;
-    language: string;
-    title: string;
-    createdAt: string;
-    author: AdminAuthor;
-    tags: Array<Tag>;
+	id: string;
+	language: string;
+	title: string;
+	createdAt: string;
+	author: AdminAuthor;
+	tags: Tag[];
 }

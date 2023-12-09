@@ -1,4 +1,4 @@
 export default class Tag {
-    id: string;
-    name:String;
+	id: string;
+	name: string;
 }

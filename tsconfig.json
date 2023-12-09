@@ -2,11 +2,11 @@
     "compilerOptions": {
       "outDir": "./dist/",
       "noImplicitAny": true,
-      "module": "es2020",
+      "module": "NodeNext",
       "target": "es6",
-      "allowJs": true,
-      "moduleResolution": "nodenext",
+      "allowJs": false,
       "jsx": "react-jsx",
-      "allowSyntheticDefaultImports": true
+      "allowSyntheticDefaultImports": true,
+      "strict": true
     }
   }
