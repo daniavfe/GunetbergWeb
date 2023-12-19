@@ -1,66 +1,19 @@
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { OpenAPI, PostService, UserService } from "../../services/openapi";
 
-import PostListComponent from "../post/list/post-list";
-import DetailPostComponent from "../post/detail/detail";
-import LoginComponent from "../login/login";
+const Main = ()=>{
 
-import GuardedRouteComponent from "./guarded-route/guarded-route";
-import EditorComponent from "../admin/editor/editor";
-import AdminComponent from "../admin/admin";
-import { apiClient } from "../../api/apiClient";
-import { useCookies } from "../../persistence/cookieService";
-import { type AxiosError, type AxiosResponse } from "axios";
-import NotificationComponent from "../notification/notification";
+    useEffect(
+        ()=>{
+            OpenAPI.BASE = "http://localhost:5029";
+            OpenAPI.
+            PostService.postPostsSearch({}).then((res)=>console.log(res));
+            
+        },
+        []
+    );
 
-const HttpInterceptorSetup = () => {
-	const axiosApiClient = apiClient;
-	const navigate = useNavigate();
-	const location = useLocation();
-
-	axiosApiClient.interceptors.request.use(
-		function (config) {
-			const token = useCookies.getToken();
-			if (token) {
-				config.headers.Authorization = `Bearer ${token}`;
-			}
-			return config;
-		},
-		async function (error) {
-			// Do something with request error
-			return await Promise.reject(error);
-		}
-	);
-
-	axiosApiClient.interceptors.response.use(
-		(response: AxiosResponse) => {
-			return response;
-		},
-		async (error: AxiosError) => {
-			if (error.response.status == 401) {
-				const callback = `${location.pathname}${location.search ?? ""}`;
-				navigate(`/login?callback=${callback}`);
-			}
-			return await Promise.reject(error);
-		}
-	);
-
-	return <></>;
-};
-
-const Main: React.FC = () => {
-	return (
-		<>
-			<NotificationComponent/>
-			<HttpInterceptorSetup/>
-			<Routes>
-				<Route path='/admin' element={<GuardedRouteComponent component={<AdminComponent/>}></GuardedRouteComponent>}/>
-				<Route path='/admin/editor/:id?' element={<GuardedRouteComponent component={<EditorComponent/>}></GuardedRouteComponent>}/>
-				<Route path="/login" element={<LoginComponent />}/>
-				<Route path="/" element={<PostListComponent/>}/>
-				<Route path="/posts/:id" element={<DetailPostComponent/>}/>
-			</Routes>
-		</>
-	);
-};
+    return (<div>This is main</div>);
+}
 
 export default Main;
