@@ -1,0 +1,74 @@
+.sort-component{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.sort-order{
+    background: #e7e9ee;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 7px;
+    border-radius: 20px;
+    margin-right: -7px;  
+}
+
+.sort-order .material-symbols-outlined{
+    font-size: 2rem;
+}
+
+.sort-order:hover{
+    cursor: pointer;
+    background: #cdcfd3;
+}
+
+.select-sort-field{
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    padding: 8px 15px;
+    font-size: 1.5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    min-width: 120px;
+    background: #d9e7cb;
+}
+
+.select-sort-field:hover{
+    cursor: pointer;
+    background: #c9d6bc;
+}
+
+
+.select-sort-item{
+    font-size: 1.3rem;
+    position: absolute;
+    top: 0;
+    left:0;
+    right: 0;
+    padding: 45px 0 0 0;
+}
+
+.select-sort-item ul{
+    margin: 0;
+    padding: 5px;
+    background: #e7e9ee;
+    list-style: none;
+    border-radius: 10px;
+}
+
+.select-sort-item ul li{
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
+.select-sort-item ul li:hover{
+    background: #cdcfd3;
+    cursor: pointer;
+}

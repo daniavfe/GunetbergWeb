@@ -1,0 +1,27 @@
+.pagination-component{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: 10px;
+    padding: 20px 0;
+}
+
+.pagination-button{
+    background: #FFF;
+    border-radius:20px;
+    border:1px solid #e7e9ee;
+    padding: 12px;
+    font-size: 1.4rem;
+}
+
+.pagination-button:hover{
+    background: #e7e9ee;
+    cursor: pointer;
+}
+
+.pagination-button:disabled{
+    background: #d9e7cb;
+    border: none;
+    cursor: auto;
+}

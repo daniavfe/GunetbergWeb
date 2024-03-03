@@ -1,2 +1,3 @@
 # GunetbergWeb
-react client for Gunetberg
+
+Javascript application using Gunetberg platform under the hook.

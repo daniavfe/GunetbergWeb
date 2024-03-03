@@ -1,8 +1,18 @@
 const path = require("path");
+const CopyPlugin = require("copy-webpack-plugin");
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
 	mode: "development",
-	entry: "./src/index.tsx",
+	entry: "./src/views/index.tsx",
+	plugins: [
+		new Dotenv({path:"env/.env.development"}),
+		new CopyPlugin({
+			patterns: [
+			  { from: "static"},
+			],
+		  }),
+	],
 	module: {
 		rules: [
 			{
@@ -32,16 +42,15 @@ module.exports = {
 	},
 	output: {
 		filename: "bundle.js",
-		path: path.resolve(__dirname, "public"),
+		path: path.resolve(__dirname, "build"),
 		publicPath: "/"
 	},
 	devServer: {
 		static: {
-			directory: path.resolve(__dirname, "public")
+			directory: path.resolve(__dirname, "build")
 		},
 		compress: true,
 		port: 3000,
 		historyApiFallback: true
-	},
-	watch: true
+	}
 };

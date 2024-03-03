@@ -1,0 +1,21 @@
+.post-list-filter-component {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #FFF;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    row-gap: 5px;
+    border: 1px solid #DDD;
+}
+
+.filter-item{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+}

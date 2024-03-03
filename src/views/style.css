@@ -1,0 +1,126 @@
+html{
+    font-size: 62.5%;
+}
+
+body{
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.5rem;
+    background: #FFF;
+}
+
+.root-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.icon-button{
+    border-radius: 50%;
+    border:0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    padding: 3px 3px;
+}
+
+.icon-button:hover{
+    background: #00000020;
+    cursor: pointer;
+    
+}
+
+.notification-component ul{
+    position: absolute;
+    margin: 5px 10px;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items:center;
+    row-gap: 10px;
+
+}
+
+.notification-item {
+    background: #EEE;
+    padding: 5px 10px;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: 20px;
+}
+
+
+.notification-item-successs {
+    background: #87cfa3;
+}
+
+.notification-item-actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+} 
+
+.notification-item-type {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #000;
+} 
+
+
+.notification-item-type-success {
+    color: #4edd61;
+} 
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    padding: 0;
+    font-weight: 400;
+    color: #1F1F1F;
+    line-height: 3.5rem;
+}
+
+h1{
+    font-size: 6rem;
+}
+
+h2{
+    font-size: 5rem;
+}
+
+h3{
+    font-size: 4rem;
+}
+
+h4{
+    font-size: 2.5rem;
+}
+
+h5{
+    font-size: 2rem;
+}
+
+h6{
+    font-size: 1.5rem;
+}
+
+p{
+    margin: 0;
+    padding: 0;
+    font-size: 1.5rem;
+}
+
+input {
+    font-family: "Poppins", sans-serif;
+}
