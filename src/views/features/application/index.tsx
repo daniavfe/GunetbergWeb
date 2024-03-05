@@ -8,13 +8,13 @@ const Application = () => {
     const viewModel = useViewModel();
 
     return (
-        <>
+        <viewModel.userContextProvider value={viewModel.user}>
             <Notification />
-            <Header user={viewModel.user}/>
+            <Header/>
             <div id="application-component" className="application-component">
                 <Outlet />
             </div>
-        </>
+        </viewModel.userContextProvider>     
     );
 };
 

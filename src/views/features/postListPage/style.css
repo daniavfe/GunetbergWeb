@@ -5,6 +5,8 @@
     justify-content: flex-start;
     align-items: stretch;
     flex-grow: 1;
+    row-gap: 20px;
+    padding: 50px 10px;
 }
 
 .post-list-header {
@@ -13,7 +15,6 @@
     justify-content: space-between;
     align-items: center;
     flex-grow: 1;
-    margin: 50px 0;
 }
 
 .post-list-header-actions{
@@ -63,4 +64,11 @@
     font-weight: 300;
     padding: 0 5px;
     font-size: 1.5rem;
+}
+
+.post-list-loading{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
 }

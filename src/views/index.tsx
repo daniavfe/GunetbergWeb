@@ -6,6 +6,7 @@ import PostPage from "./features/postPage";
 import Login from "./features/login";
 import SignUp from "./features/signup";
 import "./style.css";
+import Profile from "./features/profile";
 
 const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement,
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
                 path: "/post/:title",
                 element: <PostPage />,
             },
+            {
+                path: "profile/:alias",
+                element: <Profile/>
+            }
         ],
     },
     {

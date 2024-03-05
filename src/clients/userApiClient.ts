@@ -53,8 +53,14 @@ export default class UserApiClient implements UserApiPort {
         return this.userApiClientConverter.toUser(result.data);
     }
 
-    async getPublicUser(id: string): Promise<CompletePublicUser> {
-        const result = await this.userApi.getPublicUser(id);
+    async getPublicUserById(id: string): Promise<CompletePublicUser> {
+        const result = await this.userApi.getPublicUserById(id);
+        return this.userApiClientConverter.toCompletePublicUser(result.data);
+    }
+
+
+    async getPublicUserByAlias(alias: string): Promise<CompletePublicUser> {
+        const result = await this.userApi.getPublicUserByAlias(alias);
         return this.userApiClientConverter.toCompletePublicUser(result.data);
     }
 }

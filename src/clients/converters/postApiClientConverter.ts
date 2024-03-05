@@ -1,7 +1,7 @@
 import {
     CompletePostDto,
     SummaryPostDto,
-    SummaryPostDtoSearchResultDto,
+    SummaryPostDtoSearchResponseDto,
 } from "@gunetberg/gunetberg-client";
 import SummaryPost from "../../domain/post/summaryPost";
 import SearchResult from "../../domain/common/searchResult";
@@ -22,7 +22,7 @@ export default class PostApiClientConverter {
     }
 
     toSummaryPostSearchResult(
-        result: SummaryPostDtoSearchResultDto,
+        result: SummaryPostDtoSearchResponseDto,
     ): SearchResult<SummaryPost> {
         return new SearchResult(
             result.page,

@@ -17,5 +17,7 @@ export default interface UserApiPort {
 
     getCurrentUser(): Promise<User>;
 
-    getPublicUser(id: string): Promise<CompletePublicUser>;
+    getPublicUserById(id: string): Promise<CompletePublicUser>;
+
+    getPublicUserByAlias(alias: string): Promise<CompletePublicUser>;
 }

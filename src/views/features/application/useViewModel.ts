@@ -8,6 +8,7 @@ import NotificationMessage from "../../../domain/notification/notificationMessag
 import { NotificationType } from "../../../domain/notification/notificationType";
 import { useEffect, useState } from "react";
 import User from "../../../domain/user/user";
+import { useUserContextProvider } from "../../../config/di/contextModule";
 
 const useViewModel = () => {
     const notification = useNotification();
@@ -16,6 +17,7 @@ const useViewModel = () => {
     const userUtil = useUserUtil();
     const navigate = useNavigate();
     const userApiPort = useUserApiPort();
+    const userContextProvider = useUserContextProvider();
 
     const retrieveCurrentUser = async () => {
         try {
@@ -99,7 +101,8 @@ const useViewModel = () => {
     }, []);
 
     return {
-        user: user
+        user: user,
+        userContextProvider: userContextProvider
     }
 };
 

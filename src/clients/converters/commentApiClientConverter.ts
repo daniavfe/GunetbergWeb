@@ -1,6 +1,6 @@
 import {
     CommentDto,
-    CommentDtoPaginationResultDto,
+    CommentDtoPaginatedResponseDto,
     CreateCommentRequestDto,
 } from "@gunetberg/gunetberg-client";
 import CreateCommentRequest from "../../domain/comment/createCommentRequest";
@@ -24,7 +24,7 @@ export default class CommentApiClientConverter {
     }
 
     toCommentPaginatedResponse(
-        paginatedResponseDto: CommentDtoPaginationResultDto,
+        paginatedResponseDto: CommentDtoPaginatedResponseDto,
     ): PaginatedResponse<Comment> {
         return new PaginatedResponse<Comment>(
             paginatedResponseDto.page,
