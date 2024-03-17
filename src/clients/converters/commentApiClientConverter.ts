@@ -28,8 +28,8 @@ export default class CommentApiClientConverter {
     ): PaginatedResponse<Comment> {
         return new PaginatedResponse<Comment>(
             paginatedResponseDto.page,
-            10,
-            100,
+            paginatedResponseDto.pages,
+            paginatedResponseDto.totalItems,
             paginatedResponseDto.itemsPerPage,
             this.toComments(paginatedResponseDto.items),
         );
@@ -45,6 +45,7 @@ export default class CommentApiClientConverter {
             new Date(commentDto.createdAt),
             this.userApiClientConverter.toPublicUser(commentDto.createdBy),
             commentDto.content,
+            commentDto.numberOfReplies
         );
     }
 }

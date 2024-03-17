@@ -4,4 +4,4 @@ import User from "../../domain/user/user";
 const UserContext = createContext<User | undefined>(undefined)
 
 export const useUserContextProvider = ()=> UserContext.Provider;
-export const useUserContextConsumer = ()=>UserContext.Consumer;
+export const useUserContextConsumer = ()=> UserContext.Consumer;

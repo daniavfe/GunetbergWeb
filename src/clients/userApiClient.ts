@@ -6,6 +6,8 @@ import UpdateUserDescriptionRequest from "../domain/user/updateUserDescriptionRe
 import UpdateUserPhotoRequest from "../domain/user/updateUserPhotoRequest";
 import User from "../domain/user/user";
 import CompletePublicUser from "../domain/user/completePublicUser";
+import ErrorCode from "../domain/error/errorCode";
+import handleResponse from "./utils/httpUtils";
 
 export default class UserApiClient implements UserApiPort {
     readonly userApi: UserApi;
@@ -19,13 +21,14 @@ export default class UserApiClient implements UserApiPort {
         this.userApiClientConverter = userApiClientConverter;
     }
 
-    async createUser(createUserRequest: CreateUserRequest): Promise<string> {
-        const result = await this.userApi.createUser(
-            this.userApiClientConverter.toCreateUserRequestDto(
-                createUserRequest,
-            ),
+    async createUser(createUserRequest: CreateUserRequest): Promise<[string?, Set<ErrorCode>?]> {
+        return await handleResponse(
+            this.userApi.createUser(
+                this.userApiClientConverter.toCreateUserRequestDto(
+                    createUserRequest,
+                )),
+                (x:string)=>x
         );
-        return result.data;
     }
 
     async updateUserDescription(
@@ -63,4 +66,5 @@ export default class UserApiClient implements UserApiPort {
         const result = await this.userApi.getPublicUserByAlias(alias);
         return this.userApiClientConverter.toCompletePublicUser(result.data);
     }
+
 }

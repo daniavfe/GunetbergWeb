@@ -24,6 +24,7 @@ import UserApiClient from "../../clients/userApiClient";
 import CommentApiPort from "../../ports/commentApiPort";
 import CommentApiClient from "../../clients/commentApiClient";
 import AuthorizationBusiness from "../../business/authorizationBusiness";
+import UserBusiness from "../../business/userBusiness";
 
 const axiosInstance = axios.create();
 
@@ -89,9 +90,14 @@ const authorizationBusiness: AuthorizationBusiness = new AuthorizationBusiness(
     authorizationApiClient,
 );
 
+const userBusiness: UserBusiness = new UserBusiness(
+    userApiClient
+);
+
 export const useHttpPort = () => httpClient;
 export const usePostApiPort = () => postApiClient;
 export const useTagApiPort = () => tagApiClient;
 export const useUserApiPort = () => userApiClient;
 export const useCommentApiPort = () => commentApiClient;
 export const useAuthorizationBusiness = () => authorizationBusiness;
+export const useUserBusiness = () => userBusiness;

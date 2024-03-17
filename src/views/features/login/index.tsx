@@ -13,8 +13,6 @@ const Login = () => {
                     <p>Welcome back!</p>
                     <p>Don't you have an account? <Link to="/signup">Sign up</Link></p>
                 </div>
-                {viewmodel.authorizationError.isPasswordEmpty}
-
                 <div className="login-form">
                     <input
                         className="login-input"
@@ -31,16 +29,16 @@ const Login = () => {
                         onChange={(e) => viewmodel.updatePassword(e.target.value)}
                     />
                     <div className="login-errors">
-                        {viewmodel.authorizationError.isEmailEmpty && 
+                        {viewmodel.authorizationError?.isEmailEmpty && 
                             <span className="login-error-message">Email is empty</span>
                         }
-                        {viewmodel.authorizationError.isEmailIncorrect &&
+                        {viewmodel.authorizationError?.isEmailIncorrect &&
                             <span className="login-error-message">Email is incorrect</span>
                         }
-                        {viewmodel.authorizationError.isPasswordEmpty &&
+                        {viewmodel.authorizationError?.isPasswordEmpty &&
                             <span className="login-error-message">Password is empty</span>
                         }
-                        {viewmodel.authorizationError.isUserNotFound && 
+                        {viewmodel.authorizationError?.isUserNotFound && 
                             <span className="login-error-message">User not found</span>
                         }
                     </div>

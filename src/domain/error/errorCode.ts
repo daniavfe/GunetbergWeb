@@ -6,7 +6,7 @@ enum ErrorCode {
     EmailAlreadyInUse,
     EmptyPassword,
     EmptyPasswordCheck,
-    PasswordsMissmach,
+    PasswordsMismatch,
     AuthorizationUserNotFound,
     EntityNotFound,
     Unknown,

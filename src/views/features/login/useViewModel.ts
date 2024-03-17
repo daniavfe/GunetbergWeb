@@ -84,10 +84,7 @@ const useViewModel = () => {
 
     const [authorizationRequest, setAuthorizationRequest] =
         useState<AuthorizationRequest>(new AuthorizationRequest("", ""));
-    const [authorizationError, setAuthorizationError] =
-        useState<AuthorizationError>(
-            new AuthorizationError(false, false, false, false),
-        );
+    const [authorizationError, setAuthorizationError] = useState<AuthorizationError>();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
