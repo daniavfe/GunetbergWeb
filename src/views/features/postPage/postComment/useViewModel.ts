@@ -19,7 +19,7 @@ class Pagination {
     }
 }
 
-const useViewModel = (postId: string, loadComments: boolean, comment?: Comment, )=>{
+const useViewModel = (postId: string, isFirstNode: boolean, comment?: Comment, )=>{
 
     const commentApiPort = useCommentApiPort();
     
@@ -33,7 +33,7 @@ const useViewModel = (postId: string, loadComments: boolean, comment?: Comment, 
         
         const paginationResult =  await commentApiPort.getComments(
             new GetCommentsRequest(
-                nextPage, 4, postId, comment?.id
+                nextPage, 50, postId, comment?.id
             )
         );
 
@@ -48,19 +48,41 @@ const useViewModel = (postId: string, loadComments: boolean, comment?: Comment, 
         setItems(currentItems);
     }
 
+    const toogleReplySectionVisiblity = ()=>{
+        setIsReplySectionVisible(!isReplySectionVisible);
+    }
+
+    const toogleAddCommentSectionVisible = ()=>{
+        setIsAddCommentSectionVisible(!isAddCommentSectionVisible);
+    }
+
+    const [isReplySectionVisible, setIsReplySectionVisible] = useState<boolean>(isFirstNode);
+
+    const [isAddCommentSectionVisible, setIsAddCommentSectionVisible] = useState<boolean>(false);
+
     const [pagination, setPagination] = useState<Pagination>();
 
     const [items, setItems] = useState<Comment[]>([]);
 
     useEffect(()=>{
-        if(loadComments){
+        if(isFirstNode){
             loadMoreComments();
         }
     }, []);
 
+    useEffect(()=>{
+        if(isReplySectionVisible && items.length == 0){
+            loadMoreComments();
+        }
+    }, [isReplySectionVisible]);
+
     return {
         items,
         pagination,
+        isReplySectionVisible,
+        isAddCommentSectionVisible,
+        toogleReplySectionVisiblity,
+        toogleAddCommentSectionVisible,
         loadMoreComments
     }
 }

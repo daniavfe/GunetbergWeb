@@ -28,7 +28,8 @@ const PostPage = () => {
                             </div>
                         </div>
                         <div className="post-comments">
-                            <PostComment postId={viewmodel.post.id} loadComments={true}></PostComment>                      
+                            <h4>Comments</h4>
+                            <PostComment postId={viewmodel.post.id} isFirstNode={true}></PostComment>                      
                         </div>             
                     </>
             }

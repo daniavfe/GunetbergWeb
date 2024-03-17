@@ -36,6 +36,7 @@ const useViewModel = () => {
             );
         }
     };
+    
 
     const [post, setPost] = useState<CompletePost>();
 
