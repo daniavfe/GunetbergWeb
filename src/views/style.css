@@ -104,8 +104,9 @@ p{
     font-size: 1.5rem;
 }
 
-input {
+input, textarea {
     font-family: "Poppins", sans-serif;
+    font-size: 1.5rem;
 }
 
 .icon-button{

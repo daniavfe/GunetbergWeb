@@ -11,6 +11,10 @@ enum ErrorCode {
     EntityNotFound,
     Unknown,
     HandledByIterceptor,
+    EmptyComment,
+    EmptyPostId,
+    IncorrectPostId,
+    IncorrectCommentId,
 }
 
 export default ErrorCode;

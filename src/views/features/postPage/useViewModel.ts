@@ -9,8 +9,8 @@ import { NotificationType } from "../../../domain/notification/notificationType"
 
 const useViewModel = () => {
     const { title } = useParams();
-    const notification = useNotification();
     const navigate = useNavigate();
+    const notification = useNotification();
     const postApiPort = usePostApiPort();
 
     const loadPost = async () => {
@@ -36,8 +36,8 @@ const useViewModel = () => {
             );
         }
     };
-    
 
+    
     const [post, setPost] = useState<CompletePost>();
 
     useEffect(() => {
@@ -45,7 +45,7 @@ const useViewModel = () => {
     }, []);
 
     return {
-        post,
+        post
     };
 };
 

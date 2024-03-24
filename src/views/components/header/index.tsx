@@ -8,7 +8,7 @@ const Header = () => {
     
     return (
         <viewmodel.userContextConsumer>
-            { user => (
+            { user =>
                 <header className="application-header">
                     <div id="header-logo" className="header-logo">
                         <h3>Gunetberg</h3>
@@ -37,7 +37,7 @@ const Header = () => {
             
                     </div>
                 </header>
-            )}
+            }
         </viewmodel.userContextConsumer>
     );
 };

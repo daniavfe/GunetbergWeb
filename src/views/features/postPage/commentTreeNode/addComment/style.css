@@ -1,0 +1,54 @@
+.add-comment-component {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: 10px 0;
+}
+
+.add-comment-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    align-items: flex-start;
+    column-gap: 10px;
+}
+
+.add-comment-form img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.add-comment-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-grow: 1;
+    row-gap: 10px;
+}
+
+.add-comment-textarea {
+    flex-grow: 1;
+    border:none;
+    border-bottom: 1px solid #DDD;
+    outline: none;
+    padding: 7px 10px;
+    resize: none;
+    height: auto;
+}
+
+.add-comment-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.add-comment-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    column-gap: 10px;
+}

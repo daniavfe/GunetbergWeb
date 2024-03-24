@@ -5,6 +5,9 @@ import CreateCommentRequest from "../domain/comment/createCommentRequest";
 import GetCommentsRequest from "../domain/comment/getCommentsRequest";
 import PaginatedResponse from "../domain/common/paginatedResponse";
 import Comment from "../domain/comment/comment";
+import ErrorCode from "../domain/error/errorCode";
+import handleResponse from "./utils/httpUtils";
+import GetCommentRequest from "../domain/comment/getCommentRequest";
 
 export default class CommentApiClient implements CommentApiPort {
     readonly commentApi: CommentApi;
@@ -20,16 +23,17 @@ export default class CommentApiClient implements CommentApiPort {
 
     async createComment(
         createCommentRequest: CreateCommentRequest,
-    ): Promise<string> {
-        const result = await this.commentApi.createComment(
-            createCommentRequest.postId,
-            createCommentRequest.commentId,
-            this.commentApiClientConverter.toCreateCommentRequestDto(
-                createCommentRequest,
-            ),
+    ): Promise<[string?, Set<ErrorCode>?]>{
+        return await handleResponse(
+            this.commentApi.createComment(
+                createCommentRequest.postId,
+                createCommentRequest.commentId,
+                this.commentApiClientConverter.toCreateCommentRequestDto(
+                    createCommentRequest,
+                )
+            ), 
+            (x)=>x
         );
-
-        return result.data;
     }
 
     async getComments(
@@ -45,5 +49,10 @@ export default class CommentApiClient implements CommentApiPort {
         return this.commentApiClientConverter.toCommentPaginatedResponse(
             result.data,
         );
+    }
+    
+    async getComment(getCommentRequest: GetCommentRequest): Promise<Comment> {
+        const result = await this.commentApi.getComment(getCommentRequest.postId, getCommentRequest.commentId);
+        return this.commentApiClientConverter.toComment(result.data);
     }
 }
