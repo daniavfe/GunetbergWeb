@@ -15,15 +15,20 @@ const Summary = (props: SummaryProps) => {
             onClick={() => props.onClick(props.post)}
         >
             <div id="summary-post-image">
-                <img className="summary-post-image" src={props.post.imageUrl}></img>
+                <img
+                    className="summary-post-image"
+                    src={props.post.imageUrl}
+                ></img>
             </div>
             <div id="summary-post-content" className="summary-post-content">
                 <h4>{props.post.title}</h4>
                 <div className="summary-post-tags">
-                    {props.post.tags.map(it=><Chip>{it.name}</Chip>)}
+                    {props.post.tags.map((it) => (
+                        <Chip key={`summary-chip-${it.name}`}>{it.name}</Chip>
+                    ))}
                 </div>
                 <p>{props.post.summary}</p>
-            </div>       
+            </div>
         </div>
     );
 };

@@ -11,10 +11,10 @@ const useViewModel = () => {
 
     notification.subscribe(this, onNotificationReceived);
 
-    const removeNotification = (index: number)=> {
+    const removeNotification = (index: number) => {
         notifications.splice(index, 1);
         setNotifications([...notifications]);
-    }
+    };
 
     const [notifications, setNotifications] = useState<NotificationMessage[]>(
         [],
@@ -28,7 +28,7 @@ const useViewModel = () => {
 
     return {
         notifications: notifications,
-        removeNotification: removeNotification
+        removeNotification: removeNotification,
     };
 };
 

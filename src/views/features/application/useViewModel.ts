@@ -20,17 +20,19 @@ const useViewModel = () => {
     const userContextProvider = useUserContextProvider();
 
     const retrieveCurrentUser = async () => {
-        try {
-            const user = await userApiPort.getCurrentUser();
-            setUser(user);
-        } catch (exception) {
+        const response = await userApiPort.getCurrentUser();
+
+        if (response.hasErrors) {
             notification.invoke(
                 new NotificationMessage(
                     "Current user couldn't be retrieved",
                     NotificationType.error,
                 ),
             );
+            return;
         }
+
+        setUser(response.getData());
     };
 
     const unauthorizedErrorHandler = (): ErrorBody[] => {
@@ -102,8 +104,8 @@ const useViewModel = () => {
 
     return {
         user: user,
-        userContextProvider: userContextProvider
-    }
+        userContextProvider: userContextProvider,
+    };
 };
 
 export default useViewModel;

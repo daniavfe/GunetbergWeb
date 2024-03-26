@@ -6,7 +6,6 @@ import CreateUserError from "../../../domain/user/createUserError";
 import ErrorCode from "../../../domain/error/errorCode";
 
 const useViewModel = () => {
-
     const navigate = useNavigate();
     const userBusiness = useUserBusiness();
 
@@ -38,43 +37,41 @@ const useViewModel = () => {
         } as CreateUserRequest);
     };
 
-    const canSignup = ()=> {
-        return !!createUserRequest.alias && 
-            !!createUserRequest.email && 
+    const canSignup = () => {
+        return (
+            !!createUserRequest.alias &&
+            !!createUserRequest.email &&
             !!createUserRequest.password &&
-            !!createUserRequest.passwordCheck;
-    }
+            !!createUserRequest.passwordCheck
+        );
+    };
 
     const attemptSignup = async () => {
         setIsLoading(true);
 
-        const createUserAttempt = await userBusiness.attemptCreateUser(
-            createUserRequest
-        );
+        const response =
+            await userBusiness.attemptCreateUser(createUserRequest);
 
-        if(!!createUserAttempt[0]) {
-            navigate("/login");
-            return;
-        }
-
-        if(!!createUserAttempt[1]){
+        if (response.hasErrors) {
+            const errors = response.getErrors();
             setCreateUserError(
                 new CreateUserError(
-                    createUserAttempt[1].has(ErrorCode.EmptyAlias),
-                    createUserAttempt[1].has(ErrorCode.EmptyEmail),
-                    createUserAttempt[1].has(ErrorCode.IncorrectEmail),
-                    createUserAttempt[1].has(ErrorCode.EmptyPassword),
-                    createUserAttempt[1].has(ErrorCode.EmptyPasswordCheck),
-                    createUserAttempt[1].has(ErrorCode.PasswordsMismatch),
-                    createUserAttempt[1].has(ErrorCode.AliasAlreadyInUse),
-                    createUserAttempt[1].has(ErrorCode.EmailAlreadyInUse)
-                )
+                    errors.has(ErrorCode.EmptyAlias),
+                    errors.has(ErrorCode.EmptyEmail),
+                    errors.has(ErrorCode.IncorrectEmail),
+                    errors.has(ErrorCode.EmptyPassword),
+                    errors.has(ErrorCode.EmptyPasswordCheck),
+                    errors.has(ErrorCode.PasswordsMismatch),
+                    errors.has(ErrorCode.AliasAlreadyInUse),
+                    errors.has(ErrorCode.EmailAlreadyInUse),
+                ),
             );
             setIsLoading(false);
             return;
         }
 
-        console.log("Something horrible has happened");
+        navigate("/login");
+        return;
     };
 
     const [createUserRequest, setCreateUserRequest] =

@@ -21,7 +21,7 @@ const Pagination = ({
 
     return (
         <section id="pagination-component" className="pagination-component">
-            {page - range > 1 && 
+            {page - range > 1 && (
                 <button
                     className="pagination-button"
                     key={`pagination-button-1}`}
@@ -29,7 +29,7 @@ const Pagination = ({
                 >
                     1
                 </button>
-            }
+            )}
             {generatePagesRange().map((it) => (
                 <button
                     className="pagination-button"
@@ -40,7 +40,7 @@ const Pagination = ({
                     {it}
                 </button>
             ))}
-            {page + range < pages && 
+            {page + range < pages && (
                 <button
                     className="pagination-button"
                     key={`pagination-button-${pages}}`}
@@ -48,7 +48,7 @@ const Pagination = ({
                 >
                     {pages}
                 </button>
-            }
+            )}
         </section>
     );
 };

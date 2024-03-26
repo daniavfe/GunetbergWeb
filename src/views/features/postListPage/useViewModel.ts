@@ -21,28 +21,39 @@ const useViewModel = () => {
     const postApiPort = usePostApiPort();
 
     const getTags = async () => {
-        setTags(await tagApiPort.getTags());
+        const response = await tagApiPort.getTags();
+        if (response.hasErrors) {
+            notification.invoke(
+                new NotificationMessage(
+                    "Error while retrieving the tags",
+                    NotificationType.error,
+                ),
+            );
+            return;
+        }
+        setTags(response.getData());
     };
 
-    const searchPosts = async () => {    
-        try {
-            if (!searchRequest) {
-                return;
-            }
-            setIsLoading(true);
-            const posts = await postApiPort.searchPosts(searchRequest);
-            setSearchResult(posts);
-        } catch (exception) {
+    const searchPosts = async () => {
+        if (!searchRequest) {
+            return;
+        }
+
+        setIsLoading(true);
+
+        const response = await postApiPort.searchPosts(searchRequest);
+
+        if (response.hasErrors) {
             notification.invoke(
                 new NotificationMessage(
                     "Error while retrieving the posts",
-                    NotificationType.success,
+                    NotificationType.error,
                 ),
             );
-        } finally {
-            setIsLoading(false);
+            return;
         }
-        
+        setSearchResult(response.getData());
+        setIsLoading(false);
     };
 
     const setParamsToUrl = () => {
@@ -216,7 +227,7 @@ const useViewModel = () => {
         updateFilterByTags,
         setParamsToUrl,
         loadPost,
-        isLoading
+        isLoading,
     };
 };
 

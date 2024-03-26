@@ -7,7 +7,7 @@ export default class CreateCommentRequestValidator extends CustomValidator<Creat
         super();
         this.ruleFor("content")
             .notEmpty()
-            .withMessage(ErrorCode[ErrorCode.EmptyComment])
+            .withMessage(ErrorCode[ErrorCode.EmptyComment]);
         this.ruleFor("postId")
             .notEmpty()
             .withMessage(ErrorCode[ErrorCode.EmptyPostId]);

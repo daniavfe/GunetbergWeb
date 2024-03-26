@@ -45,7 +45,7 @@ export default class CommentApiClientConverter {
             new Date(commentDto.createdAt),
             this.userApiClientConverter.toPublicUser(commentDto.createdBy),
             commentDto.content,
-            commentDto.numberOfReplies
+            commentDto.numberOfReplies,
         );
     }
 }

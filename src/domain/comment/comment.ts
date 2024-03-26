@@ -12,12 +12,12 @@ export default class Comment {
         createdAt: Date,
         createdBy: PublicUser,
         content: string,
-        numberOfReplies: number
+        numberOfReplies: number,
     ) {
         this.id = id;
         this.createdAt = createdAt;
         this.createdBy = createdBy;
         this.content = content;
-        this.numberOfReplies = numberOfReplies
+        this.numberOfReplies = numberOfReplies;
     }
 }

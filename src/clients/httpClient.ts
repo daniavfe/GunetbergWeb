@@ -7,6 +7,7 @@ import {
 } from "axios";
 import HttpClientPort from "../ports/httpClientPort";
 import ErrorBody from "../domain/error/errorBody";
+import ErrorCode from "../domain/error/errorCode";
 
 export default class HttpClient implements HttpClientPort {
     readonly axios: AxiosInstance;
@@ -37,20 +38,35 @@ export default class HttpClient implements HttpClientPort {
                 return response;
             },
             (error: AxiosError) => {
-                switch (error.response?.status) {
-                    case HttpStatusCode.Unauthorized:
-                        error.response.data = unauthorizeErrorHandler();
-                        break;
-                    case HttpStatusCode.Forbidden:
-                        error.response.data = forbiddenErrorHandler();
-                        break;
-                    case HttpStatusCode.InternalServerError:
-                        error.response.data = defaultErrorHandler();
-                        break;
+                let errors: ErrorBody[] = [];
+
+                if (!error.response) {
+                    return Promise.reject([
+                        new ErrorBody(
+                            ErrorCode.Unknown,
+                            ErrorCode.Unknown.toString(),
+                        ),
+                    ]);
                 }
 
-                return Promise.reject(error);
+                switch (error.response?.status) {
+                    case HttpStatusCode.Unauthorized:
+                        errors = unauthorizeErrorHandler();
+                        break;
+                    case HttpStatusCode.Forbidden:
+                        errors = forbiddenErrorHandler();
+                        break;
+                    case HttpStatusCode.InternalServerError:
+                        errors = defaultErrorHandler();
+                        break;
+                    default:
+                        errors = defaultErrorHandler();
+                }
+
+                console.log("Error handler");
+
+                return Promise.reject(errors);
             },
         );
     }
-} 
+}

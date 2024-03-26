@@ -91,13 +91,9 @@ const authorizationBusiness: AuthorizationBusiness = new AuthorizationBusiness(
     authorizationApiClient,
 );
 
-const userBusiness: UserBusiness = new UserBusiness(
-    userApiClient
-);
+const userBusiness: UserBusiness = new UserBusiness(userApiClient);
 
-const commentBusiness: CommentBusiness = new CommentBusiness(
-    commentApiClient
-);
+const commentBusiness: CommentBusiness = new CommentBusiness(commentApiClient);
 
 export const useHttpPort = () => httpClient;
 export const usePostApiPort = () => postApiClient;
@@ -106,4 +102,4 @@ export const useUserApiPort = () => userApiClient;
 export const useCommentApiPort = () => commentApiClient;
 export const useAuthorizationBusiness = () => authorizationBusiness;
 export const useUserBusiness = () => userBusiness;
-export const useCommentBusiness = ()=> commentBusiness;
+export const useCommentBusiness = () => commentBusiness;

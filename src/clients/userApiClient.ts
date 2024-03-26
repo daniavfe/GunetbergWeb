@@ -6,8 +6,8 @@ import UpdateUserDescriptionRequest from "../domain/user/updateUserDescriptionRe
 import UpdateUserPhotoRequest from "../domain/user/updateUserPhotoRequest";
 import User from "../domain/user/user";
 import CompletePublicUser from "../domain/user/completePublicUser";
-import ErrorCode from "../domain/error/errorCode";
 import handleResponse from "./utils/httpUtils";
+import { ApiResponse } from "../domain/common/apiResponse";
 
 export default class UserApiClient implements UserApiPort {
     readonly userApi: UserApi;
@@ -21,50 +21,67 @@ export default class UserApiClient implements UserApiPort {
         this.userApiClientConverter = userApiClientConverter;
     }
 
-    async createUser(createUserRequest: CreateUserRequest): Promise<[string?, Set<ErrorCode>?]> {
+    async createUser(
+        createUserRequest: CreateUserRequest,
+    ): Promise<ApiResponse<string>> {
         return await handleResponse(
             this.userApi.createUser(
                 this.userApiClientConverter.toCreateUserRequestDto(
                     createUserRequest,
-                )),
-                (x:string)=>x
+                ),
+            ),
+            (x: string) => x,
         );
     }
 
     async updateUserDescription(
         updateUserDescriptionRequest: UpdateUserDescriptionRequest,
-    ): Promise<void> {
-        await this.userApi.updateUserDescription(
-            this.userApiClientConverter.toUpdateUserDescriptionRequestDto(
-                updateUserDescriptionRequest,
+    ): Promise<ApiResponse<void>> {
+        return await handleResponse(
+            this.userApi.updateUserDescription(
+                this.userApiClientConverter.toUpdateUserDescriptionRequestDto(
+                    updateUserDescriptionRequest,
+                ),
             ),
+            (x) => {},
         );
     }
 
     async updateUserPhoto(
         updateUserPhotoRequest: UpdateUserPhotoRequest,
-    ): Promise<void> {
-        await this.userApi.updateUserPhoto(
-            this.userApiClientConverter.toUpdateUserPhotoRequestDto(
-                updateUserPhotoRequest,
+    ): Promise<ApiResponse<void>> {
+        return await handleResponse(
+            this.userApi.updateUserPhoto(
+                this.userApiClientConverter.toUpdateUserPhotoRequestDto(
+                    updateUserPhotoRequest,
+                ),
             ),
+            (x) => {},
         );
     }
 
-    async getCurrentUser(): Promise<User> {
-        const result = await this.userApi.getCurrentUser();
-        return this.userApiClientConverter.toUser(result.data);
+    async getCurrentUser(): Promise<ApiResponse<User>> {
+        return await handleResponse(
+            this.userApi.getCurrentUser(),
+            this.userApiClientConverter.toUser,
+        );
     }
 
-    async getPublicUserById(id: string): Promise<CompletePublicUser> {
-        const result = await this.userApi.getPublicUserById(id);
-        return this.userApiClientConverter.toCompletePublicUser(result.data);
+    async getPublicUserById(
+        id: string,
+    ): Promise<ApiResponse<CompletePublicUser>> {
+        return await handleResponse(
+            this.userApi.getPublicUserById(id),
+            this.userApiClientConverter.toCompletePublicUser,
+        );
     }
 
-
-    async getPublicUserByAlias(alias: string): Promise<CompletePublicUser> {
-        const result = await this.userApi.getPublicUserByAlias(alias);
-        return this.userApiClientConverter.toCompletePublicUser(result.data);
+    async getPublicUserByAlias(
+        alias: string,
+    ): Promise<ApiResponse<CompletePublicUser>> {
+        return await handleResponse(
+            this.userApi.getPublicUserByAlias(alias),
+            this.userApiClientConverter.toCompletePublicUser,
+        );
     }
-
 }

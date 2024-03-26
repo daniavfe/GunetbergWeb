@@ -1,5 +1,5 @@
 import useViewModel from "./useViewModel";
-import "./style.css"
+import "./style.css";
 import { Link } from "react-router-dom";
 
 const Login = () => {
@@ -11,7 +11,10 @@ const Login = () => {
                 <h3>Sign in</h3>
                 <div>
                     <p>Welcome back!</p>
-                    <p>Don't you have an account? <Link to="/signup">Sign up</Link></p>
+                    <p>
+                        Don't you have an account?{" "}
+                        <Link to="/signup">Sign up</Link>
+                    </p>
                 </div>
                 <div className="login-form">
                     <input
@@ -26,39 +29,49 @@ const Login = () => {
                         type="password"
                         placeholder="Password"
                         value={viewmodel.authorizationRequest.password}
-                        onChange={(e) => viewmodel.updatePassword(e.target.value)}
+                        onChange={(e) =>
+                            viewmodel.updatePassword(e.target.value)
+                        }
                     />
                     <div className="login-errors">
-                        {viewmodel.authorizationError?.isEmailEmpty && 
-                            <span className="login-error-message">Email is empty</span>
-                        }
-                        {viewmodel.authorizationError?.isEmailIncorrect &&
-                            <span className="login-error-message">Email is incorrect</span>
-                        }
-                        {viewmodel.authorizationError?.isPasswordEmpty &&
-                            <span className="login-error-message">Password is empty</span>
-                        }
-                        {viewmodel.authorizationError?.isUserNotFound && 
-                            <span className="login-error-message">User not found</span>
-                        }
+                        {viewmodel.authorizationError?.isEmailEmpty && (
+                            <span className="login-error-message">
+                                Email is empty
+                            </span>
+                        )}
+                        {viewmodel.authorizationError?.isEmailIncorrect && (
+                            <span className="login-error-message">
+                                Email is incorrect
+                            </span>
+                        )}
+                        {viewmodel.authorizationError?.isPasswordEmpty && (
+                            <span className="login-error-message">
+                                Password is empty
+                            </span>
+                        )}
+                        {viewmodel.authorizationError?.isUserNotFound && (
+                            <span className="login-error-message">
+                                User not found
+                            </span>
+                        )}
                     </div>
-                    
                 </div>
-                { !viewmodel.isLoading && 
+                {!viewmodel.isLoading && (
                     <button
                         className="main-button"
                         onClick={viewmodel.attemptLogin}
                         disabled={
                             !viewmodel.authorizationRequest.email ||
                             !viewmodel.authorizationRequest.password
-                        }>
+                        }
+                    >
                         Continue
                     </button>
-                }
-                { viewmodel.isLoading && 
-                    <div>Is loading</div>
-                }
-                <p>Did you <Link to="">forget your password?</Link></p>
+                )}
+                {viewmodel.isLoading && <div>Is loading</div>}
+                <p>
+                    Did you <Link to="">forget your password?</Link>
+                </p>
             </div>
         </section>
     );

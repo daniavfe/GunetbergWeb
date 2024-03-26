@@ -2,17 +2,19 @@ import CreateCommentRequest from "../domain/comment/createCommentRequest";
 import GetCommentsRequest from "../domain/comment/getCommentsRequest";
 import PaginatedResponse from "../domain/common/paginatedResponse";
 import Comment from "../domain/comment/comment";
-import ErrorCode from "../domain/error/errorCode";
 import GetCommentRequest from "../domain/comment/getCommentRequest";
+import { ApiResponse } from "../domain/common/apiResponse";
 
 export default interface CommentApiPort {
-    createComment(createCommentRequest: CreateCommentRequest): Promise<[string?, Set<ErrorCode>?]>;
+    createComment(
+        createCommentRequest: CreateCommentRequest,
+    ): Promise<ApiResponse<string>>;
 
     getComments(
         getCommentsRequest: GetCommentsRequest,
-    ): Promise<PaginatedResponse<Comment>>;
+    ): Promise<ApiResponse<PaginatedResponse<Comment>>>;
 
     getComment(
-        getCommentRequest: GetCommentRequest
-    ): Promise<Comment>;
+        getCommentRequest: GetCommentRequest,
+    ): Promise<ApiResponse<Comment>>;
 }

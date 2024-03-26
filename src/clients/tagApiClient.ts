@@ -3,6 +3,8 @@ import Tag from "../domain/tag/tag";
 import TagApiPort from "../ports/tagApiPort";
 import TagApiClientConverter from "./converters/tagApiClientConverter";
 import CreateTagRequest from "../domain/tag/createTagRequest";
+import { ApiResponse } from "../domain/common/apiResponse";
+import handleResponse from "./utils/httpUtils";
 
 export default class TagApiClient implements TagApiPort {
     readonly tagApi: TagApi;
@@ -13,14 +15,21 @@ export default class TagApiClient implements TagApiPort {
         this.tagApiConverter = tagApiConverter;
     }
 
-    async createTags(createTagsRequest: CreateTagRequest[]): Promise<void> {
-        await this.tagApi.createTags(
-            this.tagApiConverter.toCreateTagsRequestDto(createTagsRequest),
+    async createTags(
+        createTagsRequest: CreateTagRequest[],
+    ): Promise<ApiResponse<void>> {
+        return await handleResponse(
+            this.tagApi.createTags(
+                this.tagApiConverter.toCreateTagsRequestDto(createTagsRequest),
+            ),
+            (x) => {},
         );
     }
 
-    async getTags(): Promise<Tag[]> {
-        const result = await this.tagApi.getTags();
-        return this.tagApiConverter.toTags(result.data);
+    async getTags(): Promise<ApiResponse<Tag[]>> {
+        return await handleResponse(
+            this.tagApi.getTags(),
+            this.tagApiConverter.toTags.bind(this.tagApiConverter),
+        );
     }
 }

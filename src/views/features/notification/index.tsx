@@ -11,13 +11,16 @@ const Notification = () => {
                 <div className="notification-item">
                     <div className="notification-item-message">
                         {it.message}
-                    </div>    
+                    </div>
                     <div className="notification-item-actions">
-                        <button className="icon-button" onClick={()=>viewmodel.removeNotification(index)}> 
+                        <button
+                            className="icon-button"
+                            onClick={() => viewmodel.removeNotification(index)}
+                        >
                             <span className="material-icons">close</span>
                         </button>
-                    </div>           
-                </div>      
+                    </div>
+                </div>
             </li>
         ));
     };

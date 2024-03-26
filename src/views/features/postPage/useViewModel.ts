@@ -6,7 +6,6 @@ import { usePostApiPort } from "../../../config/di/businessModule";
 import NotificationMessage from "../../../domain/notification/notificationMessage";
 import { NotificationType } from "../../../domain/notification/notificationType";
 
-
 const useViewModel = () => {
     const { title } = useParams();
     const navigate = useNavigate();
@@ -24,20 +23,22 @@ const useViewModel = () => {
             navigate("/");
             return;
         }
-        try {
-            const result = await postApiPort.getPost(title || "");
-            setPost(result);
-        } catch {
+
+        const result = await postApiPort.getPost(title);
+
+        if (result.hasErrors) {
             notification.invoke(
                 new NotificationMessage(
                     "Problem while retrieving the post",
                     NotificationType.info,
                 ),
             );
+            return;
         }
+
+        setPost(result.getData());
     };
 
-    
     const [post, setPost] = useState<CompletePost>();
 
     useEffect(() => {
@@ -45,10 +46,8 @@ const useViewModel = () => {
     }, []);
 
     return {
-        post
+        post,
     };
 };
-
-
 
 export default useViewModel;

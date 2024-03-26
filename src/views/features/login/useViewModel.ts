@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import AuthorizationRequest from "../../../domain/authorization/authorizationRequest";
 import { useNavigate } from "react-router-dom";
-import {
-    useNotification,
-    useUserStatus,
-} from "../../../config/di/eventBusModule";
+import { useNotification } from "../../../config/di/eventBusModule";
 import { useCookieUtil, useUserUtil } from "../../../config/di/utilModule";
 import NotificationMessage from "../../../domain/notification/notificationMessage";
 import { NotificationType } from "../../../domain/notification/notificationType";
@@ -37,43 +34,30 @@ const useViewModel = () => {
     const attemptLogin = async () => {
         setIsLoading(true);
 
-        const authorizationAttempt =
+        const response =
             await authorizationBusiness.attemptAuthorization(
                 authorizationRequest,
             );
 
-        if (!!authorizationAttempt[0]) {
-            cookieUtil.write(
-                "accessToken",
-                authorizationAttempt[0].accessToken,
-            );
-            notification.invoke(
-                new NotificationMessage(
-                    "Login successfully",
-                    NotificationType.info,
-                ),
-            );
-            navigate("/");
-            return;
-        }
-
-        if (!!authorizationAttempt[1]) {
+        if (response.hasErrors) {
+            const errors = response.getErrors();
             setAuthorizationError(
                 new AuthorizationError(
-                    authorizationAttempt[1].has(ErrorCode.EmptyEmail),
-                    authorizationAttempt[1].has(ErrorCode.IncorrectEmail),
-                    authorizationAttempt[1].has(ErrorCode.EmptyPassword),
-                    authorizationAttempt[1].has(
-                        ErrorCode.AuthorizationUserNotFound,
-                    ),
+                    errors.has(ErrorCode.EmptyEmail),
+                    errors.has(ErrorCode.IncorrectEmail),
+                    errors.has(ErrorCode.EmptyPassword),
+                    errors.has(ErrorCode.AuthorizationUserNotFound),
                 ),
             );
 
             setIsLoading(false);
             return;
         }
-
-        console.log("Something horrible has happened");
+        cookieUtil.write("accessToken", response.getData().accessToken);
+        notification.invoke(
+            new NotificationMessage("Welcome back", NotificationType.info),
+        );
+        navigate("/");
     };
 
     const checkUserStatus = async () => {
@@ -84,7 +68,8 @@ const useViewModel = () => {
 
     const [authorizationRequest, setAuthorizationRequest] =
         useState<AuthorizationRequest>(new AuthorizationRequest("", ""));
-    const [authorizationError, setAuthorizationError] = useState<AuthorizationError>();
+    const [authorizationError, setAuthorizationError] =
+        useState<AuthorizationError>();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {

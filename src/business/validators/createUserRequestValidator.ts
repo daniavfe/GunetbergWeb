@@ -7,7 +7,7 @@ export default class CreateUserRequestValidator extends CustomValidator<CreateUs
         super();
         this.ruleFor("alias")
             .notEmpty()
-            .withMessage(ErrorCode[ErrorCode.EmptyAlias])
+            .withMessage(ErrorCode[ErrorCode.EmptyAlias]);
         this.ruleFor("email")
             .notEmpty()
             .withMessage(ErrorCode[ErrorCode.EmptyEmail])
@@ -19,7 +19,7 @@ export default class CreateUserRequestValidator extends CustomValidator<CreateUs
         this.ruleFor("passwordCheck")
             .notEmpty()
             .withMessage(ErrorCode[ErrorCode.EmptyPasswordCheck])
-            .must((value, model)=>value === model.password)
+            .must((value, model) => value === model.password)
             .withMessage(ErrorCode[ErrorCode.PasswordsMismatch]);
     }
 }

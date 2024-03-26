@@ -7,37 +7,32 @@ import CreateCommentRequest from "../../../../../domain/comment/createCommentReq
 
 const useViewModel = (
     postId: string,
-    onCommentAdded: (commentId: string)=>void,
-    commentId?:string,
-    onCreationCancelled?: ()=>void,
-    )=>{
-
+    onCommentAdded: (commentId: string) => void,
+    commentId?: string,
+    onCreationCancelled?: () => void,
+) => {
     const userContextConsumer = useUserContextConsumer();
     const commentBusiness = useCommentBusiness();
 
-
-    const attemptCreateComment = async ()=>{
-        if(!comment){
+    const attemptCreateComment = async () => {
+        if (!comment) {
             return;
         }
 
         setIsLoading(true);
-        
-        const creationAttempt = await commentBusiness.attemptCreateComment(new CreateCommentRequest(comment, postId, commentId));
 
-        if (!!creationAttempt[0]) {
-            onCommentAdded(creationAttempt[0]);
-            cancelCommentCreation();
-            return;
-        }
+        const response = await commentBusiness.attemptCreateComment(
+            new CreateCommentRequest(comment, postId, commentId),
+        );
 
-        if (!!creationAttempt[1]) {
+        if (response.hasErrors) {
+            const errors = response.getErrors();
             setCreateCommentError(
                 new CreateCommentError(
-                    creationAttempt[1].has(ErrorCode.EmptyComment),
-                    creationAttempt[1].has(ErrorCode.EmptyPostId),
-                    creationAttempt[1].has(ErrorCode.IncorrectPostId),
-                    creationAttempt[1].has(ErrorCode.IncorrectCommentId),
+                    errors.has(ErrorCode.EmptyComment),
+                    errors.has(ErrorCode.EmptyPostId),
+                    errors.has(ErrorCode.IncorrectPostId),
+                    errors.has(ErrorCode.IncorrectCommentId),
                 ),
             );
 
@@ -45,32 +40,34 @@ const useViewModel = (
             return;
         }
 
-        console.log("Something horrible has happened");
-    }
+        onCommentAdded(response.getData());
+        cancelCommentCreation();
+        return;
+    };
 
-    const updateComment  = (comment: string)=>{
+    const updateComment = (comment: string) => {
         setComment(comment);
-    }
-    
-    const showActionButtons = ()=>{
+    };
+
+    const showActionButtons = () => {
         setIsActionSectionVisible(true);
-    }
+    };
 
-
-    const cancelCommentCreation = ()=>{
-        if(!!onCreationCancelled){
-            onCreationCancelled(); 
+    const cancelCommentCreation = () => {
+        if (!!onCreationCancelled) {
+            onCreationCancelled();
         }
         setComment("");
         setIsActionSectionVisible(false);
-    }
-
+    };
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [comment, setComment] = useState<string>();
-    const [createCommentError, setCreateCommentError] = useState<CreateCommentError>();
-    const [isActionSectionVisible, setIsActionSectionVisible] = useState<boolean>();
- 
+    const [createCommentError, setCreateCommentError] =
+        useState<CreateCommentError>();
+    const [isActionSectionVisible, setIsActionSectionVisible] =
+        useState<boolean>();
+
     return {
         userContextConsumer,
         comment,
@@ -80,7 +77,7 @@ const useViewModel = (
         attemptCreateComment,
         updateComment,
         showActionButtons,
-        cancelCommentCreation
+        cancelCommentCreation,
     };
 };
 

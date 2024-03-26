@@ -1,11 +1,11 @@
 import { useUserContextConsumer } from "../../../config/di/contextModule";
 
-const useViewModel = ()=>{
+const useViewModel = () => {
     const userContextConsumer = useUserContextConsumer();
 
     return {
-        userContextConsumer: userContextConsumer
-    }
+        userContextConsumer: userContextConsumer,
+    };
 };
 
 export default useViewModel;

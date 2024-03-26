@@ -6,6 +6,8 @@ import PostFilterRequest from "../domain/post/postFilterRequest";
 import SummaryPost from "../domain/post/summaryPost";
 import PostApiPort from "../ports/postApiPort";
 import PostApiClientConverter from "./converters/postApiClientConverter";
+import { ApiResponse } from "../domain/common/apiResponse";
+import handleResponse from "./utils/httpUtils";
 
 export default class PostApiClient implements PostApiPort {
     readonly postApi: PostApi;
@@ -21,15 +23,17 @@ export default class PostApiClient implements PostApiPort {
 
     async searchPosts(
         searchPostRequest: SearchRequest<PostFilterRequest>,
-    ): Promise<SearchResult<SummaryPost>> {
-        const result = await this.postApi.searchPosts(searchPostRequest);
-        return this.postApiClientConverter.toSummaryPostSearchResult(
-            result.data,
+    ): Promise<ApiResponse<SearchResult<SummaryPost>>> {
+        return await handleResponse(
+            this.postApi.searchPosts(searchPostRequest),
+            this.postApiClientConverter.toSummaryPostSearchResult.bind(this.postApiClientConverter),
         );
     }
 
-    async getPost(title: string): Promise<CompletePost> {
-        const result = await this.postApi.getPostByTitle(title);
-        return this.postApiClientConverter.toCompletePost(result.data);
+    async getPost(title: string): Promise<ApiResponse<CompletePost>> {
+        return await handleResponse(
+            this.postApi.getPostByTitle(title),
+            this.postApiClientConverter.toCompletePost.bind(this.postApiClientConverter),
+        );
     }
 }

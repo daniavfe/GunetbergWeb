@@ -2,7 +2,8 @@ import { CreateTagRequestDto, TagDto } from "@gunetberg/gunetberg-client";
 import Tag from "../../domain/tag/tag";
 import CreateTagRequest from "../../domain/tag/createTagRequest";
 
-export default class TagApiClientConverter {
+class TagApiClientConverter {
+
     toTags(tags: TagDto[]): Tag[] {
         return tags.map((it) => this.toTag(it));
     }
@@ -25,3 +26,5 @@ export default class TagApiClientConverter {
         };
     }
 }
+
+export default TagApiClientConverter;

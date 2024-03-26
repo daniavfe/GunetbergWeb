@@ -16,12 +16,6 @@
     max-width: 450px;
 }
 
-.signup-window a {
-    text-decoration: none;
-    font-weight: 600;
-    color: #7caf49;
-}
-
 .signup-form {
     display: flex;
     flex-direction: column;

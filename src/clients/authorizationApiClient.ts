@@ -4,7 +4,7 @@ import AuthorizationApiClientConverter from "./converters/authorizationApiClient
 import AuthorizationRequest from "../domain/authorization/authorizationRequest";
 import AuthorizationResponse from "../domain/authorization/authorizationResponse";
 import handleResponse from "./utils/httpUtils";
-import ErrorCode from "../domain/error/errorCode";
+import { ApiResponse } from "../domain/common/apiResponse";
 
 export default class AuthorizationApiClient implements AuthorizationApiPort {
     readonly authorizationApi: AuthorizationApi;
@@ -20,14 +20,14 @@ export default class AuthorizationApiClient implements AuthorizationApiPort {
 
     async auth(
         authorizationRequest: AuthorizationRequest,
-    ): Promise<[AuthorizationResponse?, Set<ErrorCode>?]> {
+    ): Promise<ApiResponse<AuthorizationResponse>> {
         return await handleResponse(
             this.authorizationApi.auth(
                 this.authorizationApiClientConverter.toAuthorizationRequestDto(
                     authorizationRequest,
                 ),
             ),
-            this.authorizationApiClientConverter.toAuthorizationResponse,
+            this.authorizationApiClientConverter.toAuthorizationResponse.bind(this.authorizationApiClientConverter),
         );
     }
 }

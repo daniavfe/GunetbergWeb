@@ -27,8 +27,12 @@ const router = createBrowserRouter([
             },
             {
                 path: "profile/:alias",
-                element: <Profile/>
-            }
+                element: <Profile />,
+            },
+            {
+                path: "/robot.txt",
+                element: <PostListPage />,
+            },
         ],
     },
     {

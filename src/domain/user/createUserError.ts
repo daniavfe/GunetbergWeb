@@ -18,8 +18,7 @@ export default class CreateUserError {
         isAliasAlreadyInUse: boolean,
         isEmailAlreadyInUse: boolean,
     ) {
-        this.isAliasEmpty = isAliasEmpty,
-        this.isEmailEmpty = isEmailEmpty;
+        (this.isAliasEmpty = isAliasEmpty), (this.isEmailEmpty = isEmailEmpty);
         this.isEmailIncorrect = isEmailIncorrect;
         this.isPasswordEmpty = isPasswordEmpty;
         this.isCheckPasswordEmpty = isCheckPasswordEmpty;

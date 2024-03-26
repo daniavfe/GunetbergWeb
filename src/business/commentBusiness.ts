@@ -2,8 +2,8 @@ import Comment from "../domain/comment/comment";
 import CreateCommentRequest from "../domain/comment/createCommentRequest";
 import GetCommentRequest from "../domain/comment/getCommentRequest";
 import GetCommentsRequest from "../domain/comment/getCommentsRequest";
+import { ApiResponse } from "../domain/common/apiResponse";
 import PaginatedResponse from "../domain/common/paginatedResponse";
-import ErrorCode from "../domain/error/errorCode";
 import CommentApiPort from "../ports/commentApiPort";
 import CreateCommentRequestValidator from "./validators/createCommentRequestValidator";
 
@@ -15,28 +15,27 @@ export default class CommentBusiness {
     }
 
     async attemptCreateComment(
-        createCommentRequest: CreateCommentRequest
-        ): Promise<[string?, Set<ErrorCode>?]> {
+        createCommentRequest: CreateCommentRequest,
+    ): Promise<ApiResponse<string>> {
+        const validator = new CreateCommentRequestValidator();
+        const validationErrors = validator.validateModel(createCommentRequest);
 
-            const validator = new CreateCommentRequestValidator();
-            const validationErrors = validator.validateModel(createCommentRequest);
+        if (validationErrors.size > 0) {
+            return new ApiResponse<string>(undefined, validationErrors);
+        }
 
-            if (validationErrors.size > 0) {
-                return [, validationErrors];
-            }
-
-            return await this.commentApiPort.createComment(createCommentRequest);
+        return await this.commentApiPort.createComment(createCommentRequest);
     }
 
     async getComments(
-        getCommentRequest: GetCommentsRequest
-    ): Promise<PaginatedResponse<Comment>> {
+        getCommentRequest: GetCommentsRequest,
+    ): Promise<ApiResponse<PaginatedResponse<Comment>>> {
         return await this.commentApiPort.getComments(getCommentRequest);
     }
 
     async getComment(
-        getCommentRequest: GetCommentRequest
-    ){
+        getCommentRequest: GetCommentRequest,
+    ): Promise<ApiResponse<Comment>> {
         return await this.commentApiPort.getComment(getCommentRequest);
     }
 }

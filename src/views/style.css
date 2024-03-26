@@ -168,3 +168,9 @@ input, textarea {
     background: #00000020;
     cursor: pointer;
 }
+
+a{
+    text-decoration: none;
+    font-weight: 600;
+    color: #7caf49; 
+}

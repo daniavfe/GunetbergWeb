@@ -27,7 +27,10 @@ const Filter = (props: FilterProps) => {
     };
 
     return (
-        <div id="post-list-filter-component" className="post-list-filter-component">
+        <div
+            id="post-list-filter-component"
+            className="post-list-filter-component"
+        >
             <h4>Filter</h4>
             <div className="filter-item">
                 <h6>Items per page</h6>
@@ -66,10 +69,8 @@ const Filter = (props: FilterProps) => {
                         <label>{it.name}</label>
                     </div>
                 ))}
-
             </div>
 
-            
             <div className="filter-item">
                 <h6>Sort by</h6>
                 <select
@@ -91,7 +92,9 @@ const Filter = (props: FilterProps) => {
                         props.updateSortByDescending(!props.sortByDescending)
                     }
                 />
-                <label htmlFor="sortByDescendingInput">Sort By descending</label>
+                <label htmlFor="sortByDescendingInput">
+                    Sort By descending
+                </label>
             </div>
         </div>
     );

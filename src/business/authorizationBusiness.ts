@@ -1,6 +1,7 @@
 import AuthorizationRequest from "../domain/authorization/authorizationRequest";
 import AuthorizationResponse from "../domain/authorization/authorizationResponse";
-import ErrorCode from "../domain/error/errorCode";
+import { ApiResponse } from "../domain/common/apiResponse";
+
 import AuthorizationApiPort from "../ports/authorizationApiPort";
 import AuthorizationRequestValidator from "./validators/authorizationRequestValidator";
 
@@ -13,12 +14,15 @@ export default class AuthorizationBusiness {
 
     async attemptAuthorization(
         authorizationRequest: AuthorizationRequest,
-    ): Promise<[AuthorizationResponse?, Set<ErrorCode>?]> {
+    ): Promise<ApiResponse<AuthorizationResponse>> {
         const validator = new AuthorizationRequestValidator();
         const validationErrors = validator.validateModel(authorizationRequest);
 
         if (validationErrors.size > 0) {
-            return [, validationErrors];
+            return new ApiResponse<AuthorizationResponse>(
+                undefined,
+                validationErrors,
+            );
         }
 
         return await this.authorizationApi.auth(authorizationRequest);
